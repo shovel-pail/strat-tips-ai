@@ -33,11 +33,11 @@ export function InsightCard({
   healthScore,
   className,
 }: InsightCardProps) {
-  const effortColor = {
-    Easy: 'bg-green-50 text-green-700',
-    Medium: 'bg-amber-50 text-amber-700',
-    Hard: 'bg-red-50 text-red-700',
-  }[effort];
+  const urgencyColor = {
+    '🔴 Urgent': 'bg-red-50 text-red-700',
+    '🟡 Important': 'bg-amber-50 text-amber-700',
+    '🟢 Long-Term': 'bg-green-50 text-green-700',
+  }[urgency || '🟢 Long-Term'];
 
   const handleScheduleCall = () => {
     toast.success('Call Scheduled', {
@@ -53,11 +53,10 @@ export function InsightCard({
       <div className="p-6">
         <div className="flex items-start justify-between mb-4">
           <h3 className="text-lg font-medium leading-tight flex items-center gap-2">
-            {urgency && <span className="text-base">{urgency}</span>}
             {title}
           </h3>
-          <Badge variant="outline" className={cn("ml-2", effortColor)}>
-            {effort} effort
+          <Badge variant="outline" className={cn("ml-2", urgencyColor)}>
+            {urgency || '🟢 Long-Term'}
           </Badge>
         </div>
         
