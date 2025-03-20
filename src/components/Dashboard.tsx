@@ -221,7 +221,6 @@ export function Dashboard({ className }: DashboardProps) {
                             effort={insight.effort}
                             urgency={insight.urgency}
                             industryComparison={insight.industryComparison}
-                            revenueScore={insight.revenueScore}
                             healthScore={insight.healthScore}
                             className={`animate-slide-up stagger-${index + 1}`}
                             showPremiumAlert={index === 0}
