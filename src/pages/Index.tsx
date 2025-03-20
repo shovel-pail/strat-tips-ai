@@ -36,11 +36,11 @@ const Index = () => {
             </p>
             
             <div className="flex flex-col sm:flex-row items-center justify-center gap-4 animate-slide-down stagger-2">
-              <Button size="lg" onClick={scrollToDashboard}>
+              <Button variant="gradient" size="lg" onClick={scrollToDashboard} className="shadow-md hover:shadow-lg">
                 Get Started
                 <ArrowRight className="ml-2 h-4 w-4" />
               </Button>
-              <Button variant="outline" size="lg">
+              <Button variant="outline" size="lg" className="shadow-sm hover:shadow-md">
                 Learn More
               </Button>
             </div>

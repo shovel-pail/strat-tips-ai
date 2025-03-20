@@ -46,12 +46,22 @@ export function Header() {
           </nav>
           
           <div className="flex items-center space-x-4">
-            <Button variant="outline" size="sm" className="hidden sm:flex items-center">
+            <Button 
+              variant="outline" 
+              size="sm" 
+              className="hidden sm:flex items-center shadow-sm hover:shadow-md"
+            >
               <FileText size={16} className="mr-2" />
               Upload Data
               <ChevronRight size={16} className="ml-1 opacity-70" />
             </Button>
-            <Button size="sm" className="hidden sm:flex">Get Started</Button>
+            <Button 
+              variant="gradient" 
+              size="sm" 
+              className="hidden sm:flex shadow-sm hover:shadow-md"
+            >
+              Get Started
+            </Button>
             <Button variant="ghost" size="icon" className="md:hidden">
               <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-menu"><line x1="4" x2="20" y1="12" y2="12"/><line x1="4" x2="20" y1="6" y2="6"/><line x1="4" x2="20" y1="18" y2="18"/></svg>
             </Button>
