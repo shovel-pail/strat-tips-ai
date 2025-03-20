@@ -1,4 +1,3 @@
-
 import { useState } from 'react';
 import { cn } from '@/lib/utils';
 import { InsightCard } from './InsightCard';
@@ -39,6 +38,7 @@ export function Dashboard({ className }: DashboardProps) {
       
       // Store lead in localStorage from free submission
       if (data.userInfo) {
+        // Create the lead object with all insights data
         const lead = {
           id: Date.now().toString(),
           name: data.userInfo.name,
@@ -51,12 +51,13 @@ export function Dashboard({ className }: DashboardProps) {
           fileName: data.fileName || '',
           fileSize: data.fileSize || 0,
           fileType: data.fileType || '',
+          insights: results.insights || [], // Store all insights, including hidden ones
         };
         
         const existingLeads = JSON.parse(localStorage.getItem('businessInsightLeads') || '[]');
         localStorage.setItem('businessInsightLeads', JSON.stringify([...existingLeads, lead]));
         
-        console.log('Free submission lead stored:', lead);
+        console.log('Free submission lead stored with all insights:', lead);
       }
     } catch (error) {
       console.error('Error processing data:', error);
@@ -184,6 +185,7 @@ export function Dashboard({ className }: DashboardProps) {
                   <TabsList>
                     <TabsTrigger value="insights">Business Insights</TabsTrigger>
                     <TabsTrigger value="data">Data Summary</TabsTrigger>
+                    <TabsTrigger value="all-insights">All Insights</TabsTrigger>
                   </TabsList>
                   <TabsContent value="insights">
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
@@ -368,6 +370,62 @@ export function Dashboard({ className }: DashboardProps) {
                                 ))}
                               </tbody>
                             </table>
+                          </div>
+                        </CardContent>
+                      </Card>
+                    </div>
+                  </TabsContent>
+                  <TabsContent value="all-insights">
+                    <div className="space-y-6">
+                      <Card>
+                        <CardHeader>
+                          <CardTitle>All Generated Insights</CardTitle>
+                        </CardHeader>
+                        <CardContent>
+                          <p className="text-sm text-muted-foreground mb-4">
+                            This tab shows all insights generated for your business, including those that would normally require a premium upgrade.
+                          </p>
+                          
+                          <div className="space-y-6 mt-4">
+                            {analysisResults.insights.map((insight: Insight, index: number) => (
+                              <div key={index} className="p-4 border rounded-lg">
+                                <h3 className="text-lg font-medium mb-2">{insight.title}</h3>
+                                <div className="flex items-center gap-2 mb-2 text-sm">
+                                  <span className="px-2 py-1 bg-green-50 text-green-700 rounded-full text-xs font-medium">
+                                    Potential Gain: {insight.potentialGain}
+                                  </span>
+                                  <span className="px-2 py-1 bg-blue-50 text-blue-700 rounded-full text-xs font-medium">
+                                    Effort: {insight.effort}
+                                  </span>
+                                  <span className="px-2 py-1 bg-amber-50 text-amber-700 rounded-full text-xs font-medium">
+                                    Urgency: {insight.urgency}
+                                  </span>
+                                </div>
+                                <p className="text-sm mb-3">{insight.explanation}</p>
+                                {insight.steps && (
+                                  <div className="mt-2">
+                                    <h4 className="text-sm font-medium mb-1">Implementation Steps:</h4>
+                                    <ul className="list-disc list-inside text-sm text-muted-foreground space-y-1">
+                                      {insight.steps.map((step, stepIndex) => (
+                                        <li key={stepIndex}>{step}</li>
+                                      ))}
+                                    </ul>
+                                  </div>
+                                )}
+                                {insight.benchmark && (
+                                  <div className="mt-2 text-sm">
+                                    <span className="font-medium">Benchmark: </span>
+                                    <span className="text-muted-foreground">{insight.benchmark}</span>
+                                  </div>
+                                )}
+                                {insight.industryComparison && (
+                                  <div className="mt-2 text-sm">
+                                    <span className="font-medium">Industry Comparison: </span>
+                                    <span className="text-muted-foreground">{insight.industryComparison}</span>
+                                  </div>
+                                )}
+                              </div>
+                            ))}
                           </div>
                         </CardContent>
                       </Card>
