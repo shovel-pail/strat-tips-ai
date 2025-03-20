@@ -3,6 +3,7 @@ import { Github, Twitter, Linkedin, Rocket } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
 import { Link } from 'react-router-dom';
+import { PinCodeDialog } from '@/components/PinCodeDialog';
 
 type FooterProps = {
   className?: string;
@@ -103,7 +104,16 @@ export function Footer({ className }: FooterProps) {
               <p className="text-xs text-muted-foreground">
                 &copy; {currentYear} Strat.Tips. All rights reserved.
               </p>
-              {/* Removed the "View all leads" link */}
+              <PinCodeDialog 
+                title="Access Leads"
+                description="Enter the PIN to view all leads"
+                correctPin="1234"
+                redirectTo="/leads"
+              >
+                <button className="text-xs text-primary hover:underline transition-colors">
+                  View all leads
+                </button>
+              </PinCodeDialog>
             </div>
             <div className="flex space-x-6 mt-4 md:mt-0">
               <a href="#" className="text-xs text-muted-foreground hover:text-primary transition-colors">
