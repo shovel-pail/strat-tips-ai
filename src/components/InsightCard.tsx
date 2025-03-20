@@ -2,7 +2,8 @@
 import { cn } from '@/lib/utils';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { Award, DollarSign, TrendingUp, Clock, Globe, Wrench, BarChart } from 'lucide-react';
+import { Award, DollarSign, TrendingUp, Clock, Globe, Wrench, BarChart, AlertTriangle } from 'lucide-react';
+import { Alert, AlertDescription } from '@/components/ui/alert';
 
 type InsightCardProps = {
   title: string;
@@ -16,6 +17,7 @@ type InsightCardProps = {
   freeTools?: string[];
   revenueScore?: number;
   className?: string;
+  showPremiumAlert?: boolean;
 };
 
 export function InsightCard({
@@ -30,6 +32,7 @@ export function InsightCard({
   freeTools,
   revenueScore,
   className,
+  showPremiumAlert,
 }: InsightCardProps) {
   const effortColor = {
     Easy: 'bg-green-50 text-green-700',
@@ -42,6 +45,15 @@ export function InsightCard({
       "bg-white rounded-xl border overflow-hidden transition-all duration-300 hover:shadow-card",
       className
     )}>
+      {showPremiumAlert && (
+        <Alert variant="destructive" className="border-red-500 bg-red-50 mb-0 rounded-none text-red-700">
+          <AlertTriangle className="h-4 w-4 text-red-600" />
+          <AlertDescription className="text-red-700 font-medium">
+            You have 2 urgent premium insights waiting!
+          </AlertDescription>
+        </Alert>
+      )}
+      
       <div className="p-6">
         <div className="flex items-start justify-between mb-4">
           <h3 className="text-lg font-medium leading-tight flex items-center gap-2">
