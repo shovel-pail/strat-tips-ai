@@ -457,18 +457,6 @@ export function Dashboard({ className }: DashboardProps) {
           )}
         </div>
       )}
-      
-      <div className="mt-8 text-center">
-        <PinCodeDialog 
-          title="Access Business Leads" 
-          description="Enter the PIN code to view all business leads."
-          onSuccess={handleLeadsAccess}
-        >
-          <Button variant="outline" size="sm">
-            View All Leads <Lock className="ml-2 h-3 w-3" />
-          </Button>
-        </PinCodeDialog>
-      </div>
     </div>
   );
 }
