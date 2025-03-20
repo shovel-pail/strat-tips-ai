@@ -1,17 +1,19 @@
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import { Lock } from 'lucide-react';
 import { InputOTP, InputOTPGroup, InputOTPSlot } from '@/components/ui/input-otp';
 import { toast } from 'sonner';
+import { useNavigate, useLocation } from 'react-router-dom';
 
 interface PinCodeDialogProps {
   children: React.ReactNode;
   title: string;
   description: string;
   correctPin?: string;
-  onSuccess: () => void;
+  onSuccess?: () => void;
+  redirectTo?: string;
 }
 
 export function PinCodeDialog({ 
@@ -19,17 +21,38 @@ export function PinCodeDialog({
   title, 
   description, 
   correctPin = "0000", 
-  onSuccess 
+  onSuccess,
+  redirectTo
 }: PinCodeDialogProps) {
   const [pin, setPin] = useState('');
   const [isOpen, setIsOpen] = useState(false);
   const [error, setError] = useState(false);
+  const navigate = useNavigate();
+  const location = useLocation();
+  
+  // If we're on the leads page and don't have authorization, show dialog
+  useEffect(() => {
+    const hasAuthorized = sessionStorage.getItem('leads-authorized') === 'true';
+    if (location.pathname === '/leads' && !hasAuthorized) {
+      setIsOpen(true);
+    }
+  }, [location.pathname]);
 
   const handlePinSubmit = () => {
     if (pin === correctPin) {
       setError(false);
       setIsOpen(false);
-      onSuccess();
+      
+      // Store authorization in session storage
+      if (redirectTo === '/leads') {
+        sessionStorage.setItem('leads-authorized', 'true');
+      }
+      
+      if (onSuccess) {
+        onSuccess();
+      } else if (redirectTo) {
+        navigate(redirectTo);
+      }
     } else {
       setError(true);
       toast.error('Invalid PIN code', {
@@ -81,7 +104,12 @@ export function PinCodeDialog({
           <Button 
             type="button" 
             variant="outline" 
-            onClick={() => setIsOpen(false)}
+            onClick={() => {
+              setIsOpen(false);
+              if (location.pathname === '/leads') {
+                navigate('/dashboard');
+              }
+            }}
           >
             Cancel
           </Button>

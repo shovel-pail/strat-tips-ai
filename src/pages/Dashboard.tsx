@@ -3,15 +3,8 @@ import { Dashboard as DashboardComponent } from '@/components/Dashboard';
 import { Header } from '@/components/Header';
 import { Footer } from '@/components/Footer';
 import { PinCodeDialog } from '@/components/PinCodeDialog';
-import { useNavigate } from 'react-router-dom';
 
 const Dashboard = () => {
-  const navigate = useNavigate();
-  
-  const handleLeadsAccess = () => {
-    navigate('/leads');
-  };
-
   return (
     <div className="min-h-screen flex flex-col">
       <Header />
@@ -27,7 +20,7 @@ const Dashboard = () => {
         <PinCodeDialog 
           title="Access Business Leads" 
           description="Enter the PIN code to view all business leads."
-          onSuccess={handleLeadsAccess}
+          redirectTo="/leads"
         >
           <button className="text-xs text-muted-foreground hover:text-primary transition-colors flex items-center">
             View all leads
