@@ -1,9 +1,10 @@
+
 import { useState } from 'react';
 import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
-import { Lock, Mail, User, Phone, ArrowRight, Building, MapPin, Rocket, Calendar } from 'lucide-react';
+import { Lock, Mail, User, Phone, ArrowRight, Building, MapPin, Rocket, Calendar, AlertTriangle, Lightbulb, Wrench } from 'lucide-react';
 import { toast } from 'sonner';
 import { Link } from 'react-router-dom';
 
@@ -109,18 +110,39 @@ export function PremiumInsight({ title, className }: PremiumInsightProps) {
           Take your business off with Premium Insights & Implementation
         </h3>
         <p className="text-sm text-muted-foreground text-center mb-6">
-          Unlock this high-value insight to maximize your business potential. Our premium analysis includes a detailed implementation guide.
+          Unlock premium features to maximize your business potential with our comprehensive analysis and implementation plan.
         </p>
         
-        <div className="space-y-3">
-          <div className="w-full h-3 bg-secondary rounded-full overflow-hidden relative">
-            <div className="absolute inset-0 bg-stripes opacity-10"></div>
+        {/* Premium Benefits */}
+        <div className="space-y-4 mb-6">
+          <div className="flex items-start space-x-3">
+            <div className="flex-shrink-0 w-8 h-8 flex items-center justify-center rounded-full bg-amber-100">
+              <AlertTriangle className="h-4 w-4 text-amber-600" />
+            </div>
+            <div>
+              <h4 className="text-sm font-medium">Real-Time Alerts for Financial & Operational Risks</h4>
+              <p className="text-xs text-muted-foreground">Get instant notifications about critical business issues</p>
+            </div>
           </div>
-          <div className="w-full h-3 bg-secondary rounded-full overflow-hidden relative">
-            <div className="absolute inset-0 bg-stripes opacity-10"></div>
+          
+          <div className="flex items-start space-x-3">
+            <div className="flex-shrink-0 w-8 h-8 flex items-center justify-center rounded-full bg-blue-100">
+              <Lightbulb className="h-4 w-4 text-blue-600" />
+            </div>
+            <div>
+              <h4 className="text-sm font-medium">Premium Business Insights</h4>
+              <p className="text-xs text-muted-foreground">Advanced analytics and personalized recommendations</p>
+            </div>
           </div>
-          <div className="w-3/4 h-3 bg-secondary rounded-full overflow-hidden relative">
-            <div className="absolute inset-0 bg-stripes opacity-10"></div>
+          
+          <div className="flex items-start space-x-3">
+            <div className="flex-shrink-0 w-8 h-8 flex items-center justify-center rounded-full bg-green-100">
+              <Wrench className="h-4 w-4 text-green-600" />
+            </div>
+            <div>
+              <h4 className="text-sm font-medium">Implementation Support</h4>
+              <p className="text-xs text-muted-foreground">Expert guidance to put insights into action</p>
+            </div>
           </div>
         </div>
         
