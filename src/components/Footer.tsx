@@ -103,9 +103,7 @@ export function Footer({ className }: FooterProps) {
               <p className="text-xs text-muted-foreground">
                 &copy; {currentYear} Strat.Tips. All rights reserved.
               </p>
-              <Link to="/leads" className="text-xs text-primary hover:underline transition-colors">
-                View all leads
-              </Link>
+              {/* Removed the "View all leads" link */}
             </div>
             <div className="flex space-x-6 mt-4 md:mt-0">
               <a href="#" className="text-xs text-muted-foreground hover:text-primary transition-colors">
