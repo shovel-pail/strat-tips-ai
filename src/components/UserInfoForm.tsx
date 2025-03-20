@@ -153,7 +153,7 @@ export function UserInfoForm({ isOpen, onClose, onSubmit }: UserInfoFormProps) {
       </Dialog>
       
       <UserAgreement
-        isOpen={agreeOpen}
+        open={agreeOpen}
         onOpenChange={setAgreeOpen}
         onAccept={handleAccept}
       />
