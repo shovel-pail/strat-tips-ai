@@ -1,3 +1,4 @@
+
 import { cn } from '@/lib/utils';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
@@ -56,7 +57,7 @@ export function InsightCard({
             {title}
           </h3>
           <Badge variant="outline" className={cn("ml-2", effortColor)}>
-            {effort} implementation
+            {effort} effort
           </Badge>
         </div>
         
