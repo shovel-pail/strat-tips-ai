@@ -2,8 +2,9 @@
 import { cn } from '@/lib/utils';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { Award, DollarSign, TrendingUp, Clock, Globe, Wrench, BarChart, AlertTriangle } from 'lucide-react';
+import { Award, DollarSign, TrendingUp, Clock, Globe, Wrench, BarChart, AlertTriangle, Headphones } from 'lucide-react';
 import { Alert, AlertDescription } from '@/components/ui/alert';
+import { toast } from 'sonner';
 
 type InsightCardProps = {
   title: string;
@@ -40,13 +41,19 @@ export function InsightCard({
     Hard: 'bg-red-50 text-red-700',
   }[effort];
 
+  const handleScheduleCall = () => {
+    toast.success('Call Scheduled', {
+      description: 'Our implementation coach will contact you soon.',
+    });
+  };
+
   return (
     <div className={cn(
       "bg-white rounded-xl border overflow-hidden transition-all duration-300 hover:shadow-card",
       className
     )}>
       {showPremiumAlert && (
-        <Alert variant="destructive" className="border-red-500 bg-red-50 mb-0 rounded-none text-red-700 py-1.5 flex justify-center items-center">
+        <Alert variant="destructive" className="border-red-500 bg-red-50 mb-0 rounded-none text-red-700 py-1 flex justify-center items-center">
           <AlertTriangle className="h-3 w-3 text-red-600 mr-1" />
           <AlertDescription className="text-red-700 text-xs font-medium">
             You have 2 urgent premium insights waiting!
@@ -155,6 +162,18 @@ export function InsightCard({
               </ul>
             </div>
           )}
+          
+          <div className="pt-2">
+            <Button 
+              variant="gradient" 
+              size="sm"
+              className="w-full shadow-sm hover:shadow-md transition-all duration-300"
+              onClick={handleScheduleCall}
+            >
+              <Headphones className="mr-2 h-4 w-4" />
+              Schedule Implementation Call
+            </Button>
+          </div>
         </div>
       </div>
     </div>
