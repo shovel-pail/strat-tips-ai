@@ -1,4 +1,3 @@
-
 import { useState } from 'react';
 import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
@@ -6,6 +5,7 @@ import { Input } from '@/components/ui/input';
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import { Lock, Mail, User, Phone, ArrowRight, Building, MapPin } from 'lucide-react';
 import { toast } from 'sonner';
+import { Link } from 'react-router-dom';
 
 type PremiumInsightProps = {
   title: string;
@@ -26,7 +26,21 @@ export function PremiumInsight({ title, className }: PremiumInsightProps) {
     e.preventDefault();
     setLoading(true);
     
-    // Simulate API call
+    const lead = {
+      id: Date.now().toString(),
+      name,
+      email,
+      phone,
+      company,
+      industry,
+      location,
+      source: 'premium-insight' as const,
+      timestamp: new Date().toISOString(),
+    };
+    
+    const existingLeads = JSON.parse(localStorage.getItem('businessInsightLeads') || '[]');
+    localStorage.setItem('businessInsightLeads', JSON.stringify([...existingLeads, lead]));
+    
     setTimeout(() => {
       setLoading(false);
       setDialogOpen(false);
@@ -35,7 +49,6 @@ export function PremiumInsight({ title, className }: PremiumInsightProps) {
         description: 'Check your email for the full analysis and action plan.',
       });
       
-      // Reset form
       setEmail('');
       setName('');
       setPhone('');
@@ -210,6 +223,12 @@ export function PremiumInsight({ title, className }: PremiumInsightProps) {
             </form>
           </DialogContent>
         </Dialog>
+      </div>
+      
+      <div className="px-6 py-3 bg-muted/20 border-t flex justify-between items-center">
+        <Link to="/leads" className="text-xs text-muted-foreground hover:text-primary transition-colors">
+          View all leads
+        </Link>
       </div>
     </div>
   );

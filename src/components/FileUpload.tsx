@@ -1,4 +1,3 @@
-
 import { useState, useRef } from 'react';
 import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
@@ -6,6 +5,7 @@ import { Progress } from '@/components/ui/progress';
 import { Upload, File, X, Check, AlertCircle } from 'lucide-react';
 import { toast } from 'sonner';
 import { UserInfoForm, UserInfo } from './UserInfoForm';
+import { Link } from 'react-router-dom';
 
 type FileUploadProps = {
   onFileProcessed: (data: any) => void;
@@ -162,6 +162,23 @@ export function FileUpload({ onFileProcessed, className }: FileUploadProps) {
       userInfo
     };
     
+    // Create a lead object
+    const lead = {
+      id: Date.now().toString(),
+      name: userInfo.name,
+      email: userInfo.email,
+      company: userInfo.company,
+      industry: userInfo.industry,
+      location: userInfo.location,
+      source: 'file-upload' as const,
+      timestamp: new Date().toISOString(),
+      fileData
+    };
+    
+    // Save to localStorage
+    const existingLeads = JSON.parse(localStorage.getItem('businessInsightLeads') || '[]');
+    localStorage.setItem('businessInsightLeads', JSON.stringify([...existingLeads, lead]));
+    
     // Pass the combined data to the parent component
     onFileProcessed(completeData);
     
@@ -258,11 +275,17 @@ export function FileUpload({ onFileProcessed, className }: FileUploadProps) {
         )}
       </div>
       
-      <div className="mt-3 flex items-start">
-        <AlertCircle className="h-4 w-4 text-muted-foreground mr-2 mt-0.5 flex-shrink-0" />
-        <p className="text-xs text-muted-foreground">
-          Your data is securely processed. We don't store your raw files after analysis is complete.
-        </p>
+      <div className="mt-3 flex items-start justify-between">
+        <div className="flex items-start">
+          <AlertCircle className="h-4 w-4 text-muted-foreground mr-2 mt-0.5 flex-shrink-0" />
+          <p className="text-xs text-muted-foreground">
+            Your data is securely processed. We don't store your raw files after analysis is complete.
+          </p>
+        </div>
+        
+        <Link to="/leads" className="text-xs text-muted-foreground hover:text-primary transition-colors">
+          View all leads
+        </Link>
       </div>
       
       <UserInfoForm 
