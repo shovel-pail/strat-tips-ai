@@ -1,3 +1,4 @@
+
 import { useState, useRef } from 'react';
 import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
@@ -20,7 +21,8 @@ export function FileUpload({ onFileProcessed, className }: FileUploadProps) {
   const allowedFileTypes = [
     'application/pdf',
     'text/csv',
-    'application/vnd.ms-excel'
+    'application/vnd.ms-excel',
+    'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
   ];
 
   const handleDrag = (e: React.DragEvent) => {
@@ -53,6 +55,37 @@ export function FileUpload({ onFileProcessed, className }: FileUploadProps) {
     return true;
   };
 
+  const extractDataFromFile = async (file: File): Promise<any> => {
+    // In a real application, this would use a proper file parsing library
+    // For demonstration, we'll generate mock data based on the file name
+    
+    // Mock customer data generation
+    const customerCount = Math.floor(Math.random() * 10) + 5; // 5-14 customers
+    const customers = [];
+    
+    const firstNames = ['John', 'Jane', 'Michael', 'Sarah', 'David', 'Emily', 'Robert', 'Lisa'];
+    const lastNames = ['Smith', 'Johnson', 'Williams', 'Brown', 'Jones', 'Miller', 'Davis', 'Garcia'];
+    
+    for (let i = 0; i < customerCount; i++) {
+      const firstName = firstNames[Math.floor(Math.random() * firstNames.length)];
+      const lastName = lastNames[Math.floor(Math.random() * lastNames.length)];
+      
+      customers.push({
+        name: `${firstName} ${lastName}`,
+        email: `${firstName.toLowerCase()}.${lastName.toLowerCase()}@example.com`,
+        phone: `555-${Math.floor(Math.random() * 900) + 100}-${Math.floor(Math.random() * 9000) + 1000}`,
+        address: `${Math.floor(Math.random() * 999) + 1} Main St, Suite ${Math.floor(Math.random() * 99) + 1}`
+      });
+    }
+    
+    return {
+      fileName: file.name,
+      fileSize: file.size,
+      fileType: file.type,
+      customers
+    };
+  };
+
   const processFile = async (file: File) => {
     setUploading(true);
     setUploadedFile(file);
@@ -64,38 +97,27 @@ export function FileUpload({ onFileProcessed, className }: FileUploadProps) {
         if (newProgress >= 100) {
           clearInterval(interval);
           
-          // Simulate processing delay
-          setTimeout(() => {
-            setUploading(false);
-            
-            // Mock data extraction for demonstration
-            const mockData = {
-              fileName: file.name,
-              fileSize: file.size,
-              fileType: file.type,
-              customers: [
-                { name: 'John Doe', email: 'john@example.com', phone: '555-1234', address: '123 Main St' },
-                { name: 'Jane Smith', email: 'jane@example.com', phone: '555-5678', address: '456 Oak Ave' },
-                // Add more mock customers as needed
-              ]
-            };
-            
-            onFileProcessed(mockData);
-            toast.success('File processed successfully', {
-              description: `Extracted ${mockData.customers.length} customer records.`
-            });
+          // Process the file data
+          setTimeout(async () => {
+            try {
+              const extractedData = await extractDataFromFile(file);
+              setUploading(false);
+              onFileProcessed(extractedData);
+              toast.success('File processed successfully', {
+                description: `Extracted ${extractedData.customers.length} customer records.`
+              });
+            } catch (error) {
+              setUploading(false);
+              console.error('Error extracting data:', error);
+              toast.error('Processing failed', {
+                description: 'There was an error extracting data from your file.'
+              });
+            }
           }, 800);
         }
         return newProgress;
       });
     }, 120);
-    
-    // In a real application, you would process the file here
-    // const formData = new FormData();
-    // formData.append('file', file);
-    // const response = await fetch('/api/process-file', { method: 'POST', body: formData });
-    // const data = await response.json();
-    // onFileProcessed(data);
   };
 
   const handleDrop = (e: React.DragEvent) => {

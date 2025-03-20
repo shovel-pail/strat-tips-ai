@@ -8,6 +8,7 @@ import { FileUpload } from './FileUpload';
 import { UserAgreement } from './UserAgreement';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { ArrowLeft, Upload, CheckCircle } from 'lucide-react';
+import { generateInsights, type AnalysisResults, type Insight } from '@/utils/aiProcessing';
 
 type DashboardProps = {
   className?: string;
@@ -17,65 +18,37 @@ export function Dashboard({ className }: DashboardProps) {
   const [step, setStep] = useState<'upload' | 'agreement' | 'insights'>('upload');
   const [uploadedData, setUploadedData] = useState<any>(null);
   const [processingComplete, setProcessingComplete] = useState(false);
+  const [analysisResults, setAnalysisResults] = useState<AnalysisResults | null>(null);
+  const [processingError, setProcessingError] = useState<string | null>(null);
   
-  // Mock insights data - in a real app, this would come from the AI processing
-  const insights = [
-    {
-      title: "Implement Variable Pricing Strategy for Top Products",
-      potentialGain: "$2,500/month",
-      explanation: "Analysis shows your best-selling products have inelastic demand, meaning customers are less sensitive to price increases. Implementing a 5-10% increase on these items can significantly boost profit margins.",
-      benchmark: "According to McKinsey & Company research, strategic price optimization typically yields a 2-4% revenue increase, translating to a 10-15% profit increase for small businesses.",
-      steps: [
-        "Identify your top 3 products by sales volume and profit margin.",
-        "Implement a 5% price increase and monitor sales for 2 weeks.",
-        "If volume remains stable, consider an additional 5% increase.",
-      ],
-      effort: "Easy" as const,
-    },
-    {
-      title: "Optimize Marketing Spend Allocation",
-      potentialGain: "$1,800/month",
-      explanation: "Your current ad spend is evenly distributed, but conversion rates vary significantly by channel. Reallocating budget to high-performing channels will improve ROI.",
-      benchmark: "HubSpot's 2023 marketing report found businesses that reallocate marketing budgets quarterly see 23% higher conversion rates than those with static budgets.",
-      steps: [
-        "Review conversion rates across all marketing channels.",
-        "Reduce budget for channels with below-average conversion by 30%.",
-        "Reinvest those funds in your top-performing channel.",
-      ],
-      effort: "Medium" as const,
-    },
-    {
-      title: "Implement Customer Retention Program",
-      potentialGain: "$3,200/month",
-      explanation: "Your data shows a 15% customer churn rate, higher than industry average. A structured retention program focusing on high-value customers can significantly increase lifetime value.",
-      benchmark: "According to Harvard Business Review, increasing customer retention by just 5% can increase profits by 25-95% depending on industry.",
-      steps: [
-        "Segment customers by purchase frequency and average order value.",
-        "Create a personalized offer for your top 20% of customers.",
-        "Implement an email sequence with exclusive benefits to encourage repeat purchases.",
-      ],
-      effort: "Hard" as const,
-    },
-  ];
-
   const handleFileProcessed = (data: any) => {
     setUploadedData(data);
     setStep('agreement');
   };
 
-  const handleAgreementAccepted = () => {
+  const handleAgreementAccepted = async () => {
     setStep('insights');
+    setProcessingComplete(false);
+    setProcessingError(null);
     
-    // Simulate AI processing time
-    setTimeout(() => {
+    try {
+      // Process the uploaded data with AI
+      const results = await generateInsights(uploadedData);
+      setAnalysisResults(results);
       setProcessingComplete(true);
-    }, 3000);
+    } catch (error) {
+      console.error('Error processing data:', error);
+      setProcessingError('There was an error analyzing your data. Please try again.');
+      setProcessingComplete(true);
+    }
   };
 
   const resetProcess = () => {
     setStep('upload');
     setUploadedData(null);
     setProcessingComplete(false);
+    setAnalysisResults(null);
+    setProcessingError(null);
   };
 
   return (
@@ -174,6 +147,18 @@ export function Dashboard({ className }: DashboardProps) {
                 This typically takes 20-30 seconds.
               </p>
             </div>
+          ) : processingError ? (
+            <div className="p-6 border rounded-lg bg-red-50 border-red-100 mb-6">
+              <h3 className="text-lg font-medium mb-2 text-red-700">Processing Error</h3>
+              <p className="text-red-600">{processingError}</p>
+              <Button 
+                variant="outline"
+                className="mt-4"
+                onClick={resetProcess}
+              >
+                Try Again
+              </Button>
+            </div>
           ) : (
             <>
               <div className="p-4 border rounded-lg bg-green-50 border-green-100 mb-6 flex items-center">
@@ -183,90 +168,92 @@ export function Dashboard({ className }: DashboardProps) {
                 </p>
               </div>
               
-              <Tabs defaultValue="insights" className="mb-8">
-                <TabsList>
-                  <TabsTrigger value="insights">Business Insights</TabsTrigger>
-                  <TabsTrigger value="data">Data Summary</TabsTrigger>
-                </TabsList>
-                <TabsContent value="insights">
-                  <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                    <div className="md:col-span-2 grid grid-cols-1 gap-6">
-                      <InsightCard
-                        title={insights[0].title}
-                        potentialGain={insights[0].potentialGain}
-                        explanation={insights[0].explanation}
-                        benchmark={insights[0].benchmark}
-                        steps={insights[0].steps}
-                        effort={insights[0].effort}
-                        className="animate-slide-up stagger-1"
-                      />
-                      <InsightCard
-                        title={insights[1].title}
-                        potentialGain={insights[1].potentialGain}
-                        explanation={insights[1].explanation}
-                        benchmark={insights[1].benchmark}
-                        steps={insights[1].steps}
-                        effort={insights[1].effort}
-                        className="animate-slide-up stagger-2"
-                      />
-                    </div>
-                    <PremiumInsight 
-                      title={insights[2].title}
-                      className="animate-slide-up stagger-3"
-                    />
-                  </div>
-                </TabsContent>
-                <TabsContent value="data">
-                  <div className="bg-white p-6 rounded-xl border">
-                    <h3 className="text-lg font-medium mb-4">Data Summary</h3>
-                    {uploadedData && (
-                      <div className="space-y-4">
-                        <div>
-                          <h4 className="text-sm font-medium mb-2">File Information</h4>
-                          <div className="grid grid-cols-2 gap-2 text-sm">
-                            <p className="text-muted-foreground">Filename:</p>
-                            <p>{uploadedData.fileName}</p>
-                            <p className="text-muted-foreground">File Size:</p>
-                            <p>{Math.round(uploadedData.fileSize / 1024)} KB</p>
-                            <p className="text-muted-foreground">File Type:</p>
-                            <p>{uploadedData.fileType}</p>
-                          </div>
-                        </div>
-                        
-                        <div>
-                          <h4 className="text-sm font-medium mb-2">Customer Data</h4>
-                          <p className="text-sm text-muted-foreground mb-3">
-                            {uploadedData.customers.length} customer records processed
-                          </p>
-                          
-                          <div className="overflow-x-auto">
-                            <table className="w-full text-sm">
-                              <thead>
-                                <tr className="bg-muted">
-                                  <th className="py-2 px-3 text-left text-xs font-medium text-muted-foreground">Name</th>
-                                  <th className="py-2 px-3 text-left text-xs font-medium text-muted-foreground">Email</th>
-                                  <th className="py-2 px-3 text-left text-xs font-medium text-muted-foreground">Phone</th>
-                                  <th className="py-2 px-3 text-left text-xs font-medium text-muted-foreground">Address</th>
-                                </tr>
-                              </thead>
-                              <tbody>
-                                {uploadedData.customers.map((customer: any, index: number) => (
-                                  <tr key={index} className="border-b last:border-0">
-                                    <td className="py-2 px-3">{customer.name}</td>
-                                    <td className="py-2 px-3">{customer.email}</td>
-                                    <td className="py-2 px-3">{customer.phone}</td>
-                                    <td className="py-2 px-3">{customer.address}</td>
-                                  </tr>
-                                ))}
-                              </tbody>
-                            </table>
-                          </div>
-                        </div>
+              {analysisResults && (
+                <Tabs defaultValue="insights" className="mb-8">
+                  <TabsList>
+                    <TabsTrigger value="insights">Business Insights</TabsTrigger>
+                    <TabsTrigger value="data">Data Summary</TabsTrigger>
+                  </TabsList>
+                  <TabsContent value="insights">
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                      <div className="md:col-span-2 grid grid-cols-1 gap-6">
+                        {analysisResults.insights.slice(0, 2).map((insight: Insight, index: number) => (
+                          <InsightCard
+                            key={index}
+                            title={insight.title}
+                            potentialGain={insight.potentialGain}
+                            explanation={insight.explanation}
+                            benchmark={insight.benchmark}
+                            steps={insight.steps}
+                            effort={insight.effort}
+                            className={`animate-slide-up stagger-${index + 1}`}
+                          />
+                        ))}
                       </div>
-                    )}
-                  </div>
-                </TabsContent>
-              </Tabs>
+                      {analysisResults.insights.length > 2 && (
+                        <PremiumInsight 
+                          title={analysisResults.insights[2].title}
+                          className="animate-slide-up stagger-3"
+                        />
+                      )}
+                    </div>
+                  </TabsContent>
+                  <TabsContent value="data">
+                    <div className="bg-white p-6 rounded-xl border">
+                      <h3 className="text-lg font-medium mb-4">Business Summary</h3>
+                      {uploadedData && analysisResults.summary && (
+                        <div className="space-y-4">
+                          <div>
+                            <h4 className="text-sm font-medium mb-2">Key Metrics</h4>
+                            <div className="grid grid-cols-2 gap-2 text-sm">
+                              <p className="text-muted-foreground">Total Revenue:</p>
+                              <p>{analysisResults.summary.totalRevenue}</p>
+                              <p className="text-muted-foreground">Best Selling Product:</p>
+                              <p>{analysisResults.summary.bestSellingProduct}</p>
+                              <p className="text-muted-foreground">Sales Growth:</p>
+                              <p>{analysisResults.summary.salesGrowth}</p>
+                              <p className="text-muted-foreground">Cash Flow Status:</p>
+                              <p>{analysisResults.summary.cashFlowStatus}</p>
+                              <p className="text-muted-foreground">Customer Retention Rate:</p>
+                              <p>{analysisResults.summary.customerRetentionRate}</p>
+                            </div>
+                          </div>
+                          
+                          <div>
+                            <h4 className="text-sm font-medium mb-2">Customer Data</h4>
+                            <p className="text-sm text-muted-foreground mb-3">
+                              {uploadedData.customers.length} customer records processed
+                            </p>
+                            
+                            <div className="overflow-x-auto">
+                              <table className="w-full text-sm">
+                                <thead>
+                                  <tr className="bg-muted">
+                                    <th className="py-2 px-3 text-left text-xs font-medium text-muted-foreground">Name</th>
+                                    <th className="py-2 px-3 text-left text-xs font-medium text-muted-foreground">Email</th>
+                                    <th className="py-2 px-3 text-left text-xs font-medium text-muted-foreground">Phone</th>
+                                    <th className="py-2 px-3 text-left text-xs font-medium text-muted-foreground">Address</th>
+                                  </tr>
+                                </thead>
+                                <tbody>
+                                  {uploadedData.customers.map((customer: any, index: number) => (
+                                    <tr key={index} className="border-b last:border-0">
+                                      <td className="py-2 px-3">{customer.name}</td>
+                                      <td className="py-2 px-3">{customer.email}</td>
+                                      <td className="py-2 px-3">{customer.phone}</td>
+                                      <td className="py-2 px-3">{customer.address}</td>
+                                    </tr>
+                                  ))}
+                                </tbody>
+                              </table>
+                            </div>
+                          </div>
+                        </div>
+                      )}
+                    </div>
+                  </TabsContent>
+                </Tabs>
+              )}
             </>
           )}
         </div>
