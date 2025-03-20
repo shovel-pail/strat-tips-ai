@@ -26,6 +26,13 @@ export function UserAgreement({ open, onOpenChange, onAccept, className }: UserA
     setAgreed(true);
   };
 
+  const handleAcceptTerms = () => {
+    setAgreed(true);
+    setDialogOpenState(false);
+    // Important: Call onAccept after accepting the terms to ensure the form can be submitted
+    onAccept();
+  };
+
   const handleProceed = () => {
     if (agreed) {
       onAccept();
@@ -250,15 +257,12 @@ export function UserAgreement({ open, onOpenChange, onAccept, className }: UserA
                     <DialogFooter className="pt-4 mt-4 border-t">
                       <Button 
                         variant="outline"
-                        onClick={() => setDialogOpen(false)}
+                        onClick={() => setDialogOpenState(false)}
                       >
                         Cancel
                       </Button>
                       <Button 
-                        onClick={() => {
-                          setAgreed(true);
-                          setDialogOpen(false);
-                        }}
+                        onClick={handleAcceptTerms}
                       >
                         Accept Terms
                       </Button>
