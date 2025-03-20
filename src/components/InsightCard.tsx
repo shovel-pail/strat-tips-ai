@@ -2,7 +2,7 @@
 import { cn } from '@/lib/utils';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { Award, DollarSign, TrendingUp, Clock, Globe, Wrench, BarChart, Headphones } from 'lucide-react';
+import { Award, DollarSign, TrendingUp, Clock, Globe, Wrench, Headphones } from 'lucide-react';
 import { toast } from 'sonner';
 
 type InsightCardProps = {
@@ -15,7 +15,7 @@ type InsightCardProps = {
   urgency?: '🔴 Urgent' | '🟡 Important' | '🟢 Long-Term';
   industryComparison?: string;
   freeTools?: string[];
-  healthScore?: number;
+  healthScore?: number; // Keep this in the type, but we won't use it
   className?: string;
   showPremiumAlert?: boolean;
 };
@@ -30,7 +30,6 @@ export function InsightCard({
   urgency,
   industryComparison,
   freeTools,
-  healthScore,
   className,
 }: InsightCardProps) {
   const urgencyColor = {
@@ -67,26 +66,6 @@ export function InsightCard({
             <p className="font-medium">{potentialGain}</p>
           </div>
         </div>
-        
-        {healthScore !== undefined && (
-          <div className="mb-6 bg-green-50 p-3 rounded-lg">
-            <div className="flex items-center mb-2">
-              <Award className="h-5 w-5 text-green-600 flex-shrink-0" />
-              <p className="ml-3 text-sm font-medium text-green-700">Business Health Score</p>
-            </div>
-            <div className="relative h-2 bg-green-100 rounded-full overflow-hidden">
-              <div 
-                className="absolute top-0 left-0 h-full bg-green-600 rounded-full"
-                style={{ width: `${(healthScore / 10) * 100}%` }}
-              ></div>
-            </div>
-            <div className="flex justify-between mt-1">
-              <span className="text-xs text-green-700">0</span>
-              <span className="text-xs font-medium text-green-700">{healthScore}/10</span>
-              <span className="text-xs text-green-700">10</span>
-            </div>
-          </div>
-        )}
         
         <div className="space-y-4">
           <div>
