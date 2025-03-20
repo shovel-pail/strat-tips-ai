@@ -2,7 +2,7 @@
 import { cn } from '@/lib/utils';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { Award, DollarSign, TrendingUp, Clock, Globe, Phone, Tool } from 'lucide-react';
+import { Award, DollarSign, TrendingUp, Clock, Globe, Phone, Wrench } from 'lucide-react';
 
 type InsightCardProps = {
   title: string;
@@ -114,7 +114,7 @@ export function InsightCard({
           {freeTools && freeTools.length > 0 && (
             <div>
               <div className="flex items-center mb-1">
-                <Tool className="h-4 w-4 text-muted-foreground mr-1.5" />
+                <Wrench className="h-4 w-4 text-muted-foreground mr-1.5" />
                 <h4 className="text-sm font-medium">Helpful Free Tools</h4>
               </div>
               <ul className="space-y-2 mt-2">
