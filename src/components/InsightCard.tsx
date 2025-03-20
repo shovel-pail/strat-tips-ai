@@ -1,7 +1,8 @@
 
 import { cn } from '@/lib/utils';
 import { Badge } from '@/components/ui/badge';
-import { Award, DollarSign, TrendingUp, Clock, BarChart, Globe } from 'lucide-react';
+import { Button } from '@/components/ui/button';
+import { Award, DollarSign, TrendingUp, Clock, Globe, Phone, Tool } from 'lucide-react';
 
 type InsightCardProps = {
   title: string;
@@ -12,6 +13,7 @@ type InsightCardProps = {
   effort: 'Easy' | 'Medium' | 'Hard';
   urgency?: '🔴 Urgent' | '🟡 Important' | '🟢 Long-Term';
   industryComparison?: string;
+  freeTools?: string[];
   className?: string;
 };
 
@@ -24,6 +26,7 @@ export function InsightCard({
   effort,
   urgency,
   industryComparison,
+  freeTools,
   className,
 }: InsightCardProps) {
   const effortColor = {
@@ -31,6 +34,14 @@ export function InsightCard({
     Medium: 'bg-amber-50 text-amber-700',
     Hard: 'bg-red-50 text-red-700',
   }[effort];
+
+  const handleScheduleCall = () => {
+    import('sonner').then(({ toast }) => {
+      toast.success('Call Request Submitted', {
+        description: 'Our implementation coach will contact you shortly.',
+      });
+    });
+  };
 
   return (
     <div className={cn(
@@ -99,6 +110,34 @@ export function InsightCard({
               ))}
             </ul>
           </div>
+          
+          {freeTools && freeTools.length > 0 && (
+            <div>
+              <div className="flex items-center mb-1">
+                <Tool className="h-4 w-4 text-muted-foreground mr-1.5" />
+                <h4 className="text-sm font-medium">Helpful Free Tools</h4>
+              </div>
+              <ul className="space-y-2 mt-2">
+                {freeTools.map((tool, index) => (
+                  <li key={index} className="flex items-start">
+                    <span className="flex items-center justify-center w-5 h-5 rounded-full bg-primary/10 text-primary text-xs font-medium flex-shrink-0 mt-0.5 mr-2">
+                      •
+                    </span>
+                    <span className="text-sm text-muted-foreground">{tool}</span>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          )}
+
+          <Button 
+            variant="gradient" 
+            className="w-full mt-4 hover:scale-105 transition-all duration-300 shadow-sm hover:shadow-md"
+            onClick={handleScheduleCall}
+          >
+            <Phone className="h-4 w-4 mr-2" />
+            Schedule a Free Call with an Implementation Coach
+          </Button>
         </div>
       </div>
     </div>

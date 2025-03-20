@@ -7,6 +7,7 @@ export interface Insight {
   effort: 'Easy' | 'Medium' | 'Hard';
   urgency?: '🔴 Urgent' | '🟡 Important' | '🟢 Long-Term';
   industryComparison?: string;
+  freeTools?: string[];
 }
 
 export interface AnalysisResults {
@@ -76,7 +77,12 @@ export async function generateInsights(data: any): Promise<AnalysisResults> {
         "Schedule a monthly campaign with personalized offers for each segment."
       ],
       effort: "Medium",
-      urgency: "🟡 Important"
+      urgency: "🟡 Important",
+      freeTools: [
+        "Mailchimp (Free tier up to 2,000 contacts)",
+        "HubSpot Email Marketing (Free tier available)",
+        "Segmentation Template Spreadsheet (Available on our Resources page)"
+      ]
     });
   }
   
@@ -93,7 +99,12 @@ export async function generateInsights(data: any): Promise<AnalysisResults> {
       "Promote the program to existing customers via email and at point of sale."
     ],
     effort: customerCount > 10 ? "Hard" : "Medium",
-    urgency: "🔴 Urgent"
+    urgency: "🔴 Urgent",
+    freeTools: [
+      "Loyalty Program Planning Template (Free download from our Resources)",
+      "Open Loyalty (Open-source loyalty program software)",
+      "Customer Rewards Calculator Spreadsheet"
+    ]
   });
   
   // Phone-based outreach if we have phone numbers
@@ -110,7 +121,12 @@ export async function generateInsights(data: any): Promise<AnalysisResults> {
         "Schedule quarterly check-in calls with these high-value customers."
       ],
       effort: "Easy",
-      urgency: "🟡 Important"
+      urgency: "🟡 Important",
+      freeTools: [
+        "Google Voice (Free business phone number)",
+        "Call Script Template (Available in our Resource Library)",
+        "Customer Segmentation Calculator"
+      ]
     });
   }
   
@@ -127,7 +143,12 @@ export async function generateInsights(data: any): Promise<AnalysisResults> {
       "Analyze sales volume impact and adjust strategy accordingly."
     ],
     effort: "Medium",
-    urgency: "🟡 Important"
+    urgency: "🟡 Important",
+    freeTools: [
+      "Price Elasticity Calculator (Excel template)",
+      "Competitor Price Monitoring Template",
+      "A/B Testing Framework for Pricing"
+    ]
   });
   
   // Operational efficiency insight
@@ -143,7 +164,12 @@ export async function generateInsights(data: any): Promise<AnalysisResults> {
       "Implement changes and track time savings over 60 days."
     ],
     effort: "Easy",
-    urgency: "🟢 Long-Term"
+    urgency: "🟢 Long-Term",
+    freeTools: [
+      "Process Mapping Template (Free Flowchart Tool)",
+      "Trello (Free project management tool)",
+      "Time Tracking Spreadsheet Template"
+    ]
   });
   
   // Local market expansion insight
@@ -159,7 +185,12 @@ export async function generateInsights(data: any): Promise<AnalysisResults> {
       "Develop a special 'new neighborhood' offer with tracking code to measure results."
     ],
     effort: "Medium",
-    urgency: "🟡 Important"
+    urgency: "🟡 Important",
+    freeTools: [
+      "Google My Business (Free local business listing)",
+      "Google Maps radius tool (Free location targeting)",
+      "Local SEO Checklist (Free download)"
+    ]
   });
   
   // Randomize the order of insights but keep them consistent with the urgency levels
