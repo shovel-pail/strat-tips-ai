@@ -7,13 +7,20 @@ import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, D
 import { Shield, ArrowRight } from 'lucide-react';
 
 type UserAgreementProps = {
+  open?: boolean;
+  onOpenChange?: (open: boolean) => void;
   onAccept: () => void;
   className?: string;
 };
 
-export function UserAgreement({ onAccept, className }: UserAgreementProps) {
+export function UserAgreement({ open, onOpenChange, onAccept, className }: UserAgreementProps) {
   const [agreed, setAgreed] = useState(false);
   const [dialogOpen, setDialogOpen] = useState(false);
+
+  // Use controlled or uncontrolled dialog based on whether open/onOpenChange are provided
+  const isControlled = open !== undefined && onOpenChange !== undefined;
+  const dialogOpenState = isControlled ? open : dialogOpen;
+  const setDialogOpenState = isControlled ? onOpenChange : setDialogOpen;
 
   const handleAgree = () => {
     setAgreed(true);
@@ -23,7 +30,7 @@ export function UserAgreement({ onAccept, className }: UserAgreementProps) {
     if (agreed) {
       onAccept();
     } else {
-      setDialogOpen(true);
+      setDialogOpenState(true);
     }
   };
 
@@ -59,7 +66,7 @@ export function UserAgreement({ onAccept, className }: UserAgreementProps) {
               </label>
               <p className="text-xs text-muted-foreground">
                 By checking this box, you agree to the terms of our End-User License Agreement governing your use of Strat Tips.{" "}
-                <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
+                <Dialog open={dialogOpenState} onOpenChange={setDialogOpenState}>
                   <DialogTrigger asChild>
                     <button className="text-primary underline-offset-2 hover:underline focus:outline-none">
                       View full agreement
