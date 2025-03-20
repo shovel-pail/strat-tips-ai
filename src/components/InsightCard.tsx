@@ -1,7 +1,7 @@
 
 import { cn } from '@/lib/utils';
 import { Badge } from '@/components/ui/badge';
-import { Award, DollarSign, TrendingUp, Clock } from 'lucide-react';
+import { Award, DollarSign, TrendingUp, Clock, BarChart, Globe } from 'lucide-react';
 
 type InsightCardProps = {
   title: string;
@@ -10,6 +10,8 @@ type InsightCardProps = {
   benchmark: string;
   steps: string[];
   effort: 'Easy' | 'Medium' | 'Hard';
+  urgency?: '🔴 Urgent' | '🟡 Important' | '🟢 Long-Term';
+  industryComparison?: string;
   className?: string;
 };
 
@@ -20,6 +22,8 @@ export function InsightCard({
   benchmark,
   steps,
   effort,
+  urgency,
+  industryComparison,
   className,
 }: InsightCardProps) {
   const effortColor = {
@@ -35,7 +39,10 @@ export function InsightCard({
     )}>
       <div className="p-6">
         <div className="flex items-start justify-between mb-4">
-          <h3 className="text-lg font-medium leading-tight">{title}</h3>
+          <h3 className="text-lg font-medium leading-tight flex items-center gap-2">
+            {urgency && <span className="text-base">{urgency}</span>}
+            {title}
+          </h3>
           <Badge variant="outline" className={cn("ml-2", effortColor)}>
             {effort} implementation
           </Badge>
@@ -57,6 +64,16 @@ export function InsightCard({
             </div>
             <p className="text-sm text-muted-foreground">{explanation}</p>
           </div>
+          
+          {industryComparison && (
+            <div>
+              <div className="flex items-center mb-1">
+                <Globe className="h-4 w-4 text-muted-foreground mr-1.5" />
+                <h4 className="text-sm font-medium">Industry Comparison</h4>
+              </div>
+              <p className="text-sm text-muted-foreground">{industryComparison}</p>
+            </div>
+          )}
           
           <div>
             <div className="flex items-center mb-1">

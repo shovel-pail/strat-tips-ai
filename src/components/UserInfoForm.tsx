@@ -1,148 +1,161 @@
 
 import { useState } from 'react';
-import { Button } from '@/components/ui/button';
-import { Checkbox } from '@/components/ui/checkbox';
-import { Input } from '@/components/ui/input';
+import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Label } from '@/components/ui/label';
-import { Sheet, SheetContent, SheetDescription, SheetFooter, SheetHeader, SheetTitle } from '@/components/ui/sheet';
-import { toast } from 'sonner';
+import { Input } from '@/components/ui/input';
+import { Button } from '@/components/ui/button';
 import { UserAgreement } from './UserAgreement';
-
-interface UserInfoFormProps {
-  isOpen: boolean;
-  onClose: () => void;
-  onSubmit: (userInfo: UserInfo) => void;
-}
+import { Building, MapPin } from 'lucide-react';
 
 export interface UserInfo {
   name: string;
   email: string;
-  company: string;
-  agreedToTerms: boolean;
+  company?: string;
+  industry?: string;
+  location?: string;
 }
 
+type UserInfoFormProps = {
+  isOpen: boolean;
+  onClose: () => void;
+  onSubmit: (userInfo: UserInfo) => void;
+};
+
 export function UserInfoForm({ isOpen, onClose, onSubmit }: UserInfoFormProps) {
-  const [userInfo, setUserInfo] = useState<UserInfo>({
-    name: '',
-    email: '',
-    company: '',
-    agreedToTerms: false
-  });
-  const [agreementOpen, setAgreementOpen] = useState(false);
-
-  const handleChange = (field: keyof UserInfo, value: string | boolean) => {
-    setUserInfo(prev => ({ ...prev, [field]: value }));
-  };
-
+  const [name, setName] = useState('');
+  const [email, setEmail] = useState('');
+  const [company, setCompany] = useState('');
+  const [industry, setIndustry] = useState('');
+  const [location, setLocation] = useState('');
+  const [agreeOpen, setAgreeOpen] = useState(false);
+  const [hasAgreed, setHasAgreed] = useState(false);
+  
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     
-    // Validate form
-    if (!userInfo.name || !userInfo.email) {
-      toast.error('Missing information', {
-        description: 'Please fill in all required fields.'
-      });
+    // Check if user has agreed to terms
+    if (!hasAgreed) {
+      setAgreeOpen(true);
       return;
     }
     
-    if (!userInfo.agreedToTerms) {
-      toast.error('Terms required', {
-        description: 'You must agree to the terms and conditions to continue.'
-      });
-      return;
-    }
+    // If user has agreed, submit the form
+    onSubmit({
+      name,
+      email,
+      company: company || undefined,
+      industry: industry || undefined,
+      location: location || undefined,
+    });
     
-    // Submit form
-    onSubmit(userInfo);
+    // Reset form
+    setName('');
+    setEmail('');
+    setCompany('');
+    setIndustry('');
+    setLocation('');
     onClose();
+  };
+  
+  const handleAccept = () => {
+    setHasAgreed(true);
+    setAgreeOpen(false);
   };
 
   return (
     <>
-      <Sheet open={isOpen} onOpenChange={onClose}>
-        <SheetContent className="sm:max-w-md">
-          <SheetHeader>
-            <SheetTitle>Complete your upload</SheetTitle>
-            <SheetDescription>
-              Please provide your information before we process your file.
-            </SheetDescription>
-          </SheetHeader>
+      <Dialog open={isOpen} onOpenChange={(open) => {
+        if (!open) onClose();
+      }}>
+        <DialogContent className="sm:max-w-[425px]">
+          <DialogHeader>
+            <DialogTitle>Your Information</DialogTitle>
+            <DialogDescription>
+              Please provide your details so we can customize your business insights.
+            </DialogDescription>
+          </DialogHeader>
           
-          <form onSubmit={handleSubmit} className="space-y-4 py-4">
-            <div className="space-y-2">
-              <Label htmlFor="name">Full Name *</Label>
-              <Input 
-                id="name"
-                value={userInfo.name}
-                onChange={(e) => handleChange('name', e.target.value)}
-                placeholder="John Doe"
-                required
-              />
-            </div>
-            
-            <div className="space-y-2">
-              <Label htmlFor="email">Email Address *</Label>
-              <Input 
-                id="email"
-                type="email"
-                value={userInfo.email}
-                onChange={(e) => handleChange('email', e.target.value)}
-                placeholder="john@example.com"
-                required
-              />
-            </div>
-            
-            <div className="space-y-2">
-              <Label htmlFor="company">Company Name</Label>
-              <Input 
-                id="company"
-                value={userInfo.company}
-                onChange={(e) => handleChange('company', e.target.value)}
-                placeholder="Acme Inc."
-              />
-            </div>
-            
-            <div className="flex items-start space-x-2 pt-2">
-              <Checkbox 
-                id="terms" 
-                checked={userInfo.agreedToTerms}
-                onCheckedChange={(checked) => 
-                  handleChange('agreedToTerms', checked === true)
-                }
-              />
-              <div className="grid gap-1.5 leading-none">
-                <label
-                  htmlFor="terms"
-                  className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-                >
-                  I agree to the terms and conditions
-                </label>
-                <p className="text-sm text-muted-foreground">
-                  <button 
-                    type="button"
-                    className="underline text-primary hover:text-primary/80"
-                    onClick={() => setAgreementOpen(true)}
-                  >
-                    View user agreement
-                  </button>
-                </p>
+          <form onSubmit={handleSubmit}>
+            <div className="grid gap-4 py-4">
+              <div className="grid gap-2">
+                <Label htmlFor="name">Name</Label>
+                <Input
+                  id="name"
+                  value={name}
+                  onChange={(e) => setName(e.target.value)}
+                  placeholder="Your name"
+                  required
+                />
+              </div>
+              
+              <div className="grid gap-2">
+                <Label htmlFor="email">Email</Label>
+                <Input
+                  id="email"
+                  type="email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  placeholder="Your email address"
+                  required
+                />
+              </div>
+              
+              <div className="grid gap-2">
+                <Label htmlFor="company">Company Name (Optional)</Label>
+                <Input
+                  id="company"
+                  value={company}
+                  onChange={(e) => setCompany(e.target.value)}
+                  placeholder="Your company name"
+                />
+              </div>
+              
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div className="grid gap-2">
+                  <Label htmlFor="industry">Industry</Label>
+                  <div className="relative">
+                    <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
+                      <Building className="h-4 w-4 text-muted-foreground" />
+                    </div>
+                    <Input
+                      id="industry"
+                      value={industry}
+                      onChange={(e) => setIndustry(e.target.value)}
+                      placeholder="e.g. Retail, Tech"
+                      className="pl-10"
+                    />
+                  </div>
+                </div>
+                
+                <div className="grid gap-2">
+                  <Label htmlFor="location">Location</Label>
+                  <div className="relative">
+                    <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
+                      <MapPin className="h-4 w-4 text-muted-foreground" />
+                    </div>
+                    <Input
+                      id="location"
+                      value={location}
+                      onChange={(e) => setLocation(e.target.value)}
+                      placeholder="City, State, Country"
+                      className="pl-10"
+                    />
+                  </div>
+                </div>
               </div>
             </div>
             
-            <SheetFooter className="pt-4">
-              <Button type="submit">Continue</Button>
-            </SheetFooter>
+            <DialogFooter>
+              <Button type="submit" variant="gradient">Continue</Button>
+            </DialogFooter>
           </form>
-        </SheetContent>
-      </Sheet>
+        </DialogContent>
+      </Dialog>
       
-      <UserAgreement 
-        open={agreementOpen} 
-        onOpenChange={setAgreementOpen}
-        onAccept={() => {
-          handleChange('agreedToTerms', true);
-          setAgreementOpen(false);
-        }}
+      <UserAgreement
+        isOpen={agreeOpen}
+        onOpenChange={setAgreeOpen}
+        onAccept={handleAccept}
       />
     </>
   );
