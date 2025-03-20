@@ -1,3 +1,4 @@
+
 export interface Insight {
   title: string;
   potentialGain: string;
@@ -9,6 +10,7 @@ export interface Insight {
   industryComparison?: string;
   freeTools?: string[];
   revenueScore?: number;
+  healthScore?: number;
 }
 
 export interface AnalysisResults {
@@ -23,6 +25,7 @@ export interface AnalysisResults {
     adSpendConversion?: string;
     industry?: string;
     location?: string;
+    businessHealthScore?: number;
   };
 }
 
@@ -49,11 +52,36 @@ export async function generateInsights(data: any): Promise<AnalysisResults> {
   const conversionRate = (2 + Math.random() * 3).toFixed(1);
   const adSpendConversion = `$${adSpend.toLocaleString()} / ${conversionRate}%`;
   
+  // Overall business health score calculation
+  const businessHealthBase = 5;
+  let healthModifier = 0;
+  
+  // Factors that improve health score
+  if (parseFloat(growth) > 3) healthModifier += 1.5;
+  if (retention > 75) healthModifier += 1;
+  if (customerCount > 10) healthModifier += 0.5;
+  if (hasEmail) healthModifier += 0.5;
+  
+  // Factors that decrease health score
+  if (parseFloat(growth) < 2) healthModifier -= 1;
+  if (retention < 70) healthModifier -= 1;
+  if (customerCount < 5) healthModifier -= 0.5;
+  
+  const businessHealthScore = Math.max(1, Math.min(10, Math.round(businessHealthBase + healthModifier)));
+  
   const urgencyLevels: Array<'🔴 Urgent' | '🟡 Important' | '🟢 Long-Term'> = ['🔴 Urgent', '🟡 Important', '🟢 Long-Term'];
   
   const insights: Insight[] = [];
   
   const baseRevenueScore = Math.min(8, Math.max(3, Math.floor(customerCount / 2) + (parseFloat(growth) > 3 ? 2 : 0)));
+  
+  // Generate online competitor revenue comparison score
+  const generateCompetitorScore = (baseScore: number) => {
+    // Vary the score slightly for each insight
+    let competitorScore = baseScore + (Math.random() > 0.5 ? 1 : -1) * Math.floor(Math.random() * 2);
+    // Ensure within range
+    return Math.max(1, Math.min(10, competitorScore));
+  };
   
   if (hasEmail) {
     insights.push({
@@ -74,7 +102,8 @@ export async function generateInsights(data: any): Promise<AnalysisResults> {
         "HubSpot Email Marketing (Free tier available)",
         "Segmentation Template Spreadsheet (Available on our Resources page)"
       ],
-      revenueScore: baseRevenueScore - 1 + Math.floor(Math.random() * 3)
+      revenueScore: generateCompetitorScore(baseRevenueScore),
+      healthScore: Math.max(1, Math.min(10, businessHealthScore + 1))
     });
   }
   
@@ -96,7 +125,8 @@ export async function generateInsights(data: any): Promise<AnalysisResults> {
       "Open Loyalty (Open-source loyalty program software)",
       "Customer Rewards Calculator Spreadsheet"
     ],
-    revenueScore: baseRevenueScore + Math.floor(Math.random() * 2)
+    revenueScore: generateCompetitorScore(baseRevenueScore),
+    healthScore: businessHealthScore
   });
   
   if (hasPhoneNumbers) {
@@ -118,7 +148,8 @@ export async function generateInsights(data: any): Promise<AnalysisResults> {
         "Call Script Template (Available in our Resource Library)",
         "Customer Segmentation Calculator"
       ],
-      revenueScore: baseRevenueScore + (Math.random() > 0.5 ? 1 : 0)
+      revenueScore: generateCompetitorScore(baseRevenueScore),
+      healthScore: Math.max(1, Math.min(10, businessHealthScore + 1))
     });
   }
   
@@ -140,7 +171,8 @@ export async function generateInsights(data: any): Promise<AnalysisResults> {
       "Competitor Price Monitoring Template",
       "A/B Testing Framework for Pricing"
     ],
-    revenueScore: baseRevenueScore + 2
+    revenueScore: generateCompetitorScore(baseRevenueScore + 2),
+    healthScore: Math.max(1, Math.min(10, businessHealthScore + 2))
   });
   
   insights.push({
@@ -161,7 +193,8 @@ export async function generateInsights(data: any): Promise<AnalysisResults> {
       "Trello (Free project management tool)",
       "Time Tracking Spreadsheet Template"
     ],
-    revenueScore: baseRevenueScore - 1
+    revenueScore: generateCompetitorScore(baseRevenueScore - 1),
+    healthScore: Math.min(10, businessHealthScore + 1)
   });
   
   insights.push({
@@ -182,18 +215,30 @@ export async function generateInsights(data: any): Promise<AnalysisResults> {
       "Google Maps radius tool (Free location targeting)",
       "Local SEO Checklist (Free download)"
     ],
-    revenueScore: baseRevenueScore + 1 + Math.floor(Math.random() * 2)
+    revenueScore: generateCompetitorScore(baseRevenueScore + 1),
+    healthScore: Math.min(10, businessHealthScore)
   });
+
+  // First sort by effort (Easy -> Medium -> Hard)
+  const effortOrder = { 'Easy': 0, 'Medium': 1, 'Hard': 2 };
   
-  const shuffledInsights = [...insights]
-    .sort((a, b) => {
+  const sortedInsights = [...insights].sort((a, b) => {
+    // First sort by effort level
+    const effortComparison = effortOrder[a.effort] - effortOrder[b.effort];
+    
+    // If effort level is the same, sort by urgency
+    if (effortComparison === 0) {
       const urgencyOrder = { '🔴 Urgent': 0, '🟡 Important': 1, '🟢 Long-Term': 2 };
       const aValue = a.urgency ? urgencyOrder[a.urgency] : 3;
       const bValue = b.urgency ? urgencyOrder[b.urgency] : 3;
-      return aValue - bValue || Math.random() - 0.5;
-    });
+      return aValue - bValue;
+    }
+    
+    return effortComparison;
+  });
   
-  let selectedInsights = shuffledInsights.slice(0, 4);
+  // Take the first 4 insights after sorting
+  let selectedInsights = sortedInsights.slice(0, 4);
   
   return {
     insights: selectedInsights,
@@ -206,7 +251,8 @@ export async function generateInsights(data: any): Promise<AnalysisResults> {
       profitMargins: profitMargins,
       adSpendConversion: adSpendConversion,
       industry: industry,
-      location: location
+      location: location,
+      businessHealthScore: businessHealthScore
     },
   };
 }

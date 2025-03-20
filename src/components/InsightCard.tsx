@@ -16,6 +16,7 @@ type InsightCardProps = {
   industryComparison?: string;
   freeTools?: string[];
   revenueScore?: number;
+  healthScore?: number;
   className?: string;
   showPremiumAlert?: boolean;
 };
@@ -31,6 +32,7 @@ export function InsightCard({
   industryComparison,
   freeTools,
   revenueScore,
+  healthScore,
   className,
   showPremiumAlert,
 }: InsightCardProps) {
@@ -46,9 +48,9 @@ export function InsightCard({
       className
     )}>
       {showPremiumAlert && (
-        <Alert variant="destructive" className="border-red-500 bg-red-50 mb-0 rounded-none text-red-700">
-          <AlertTriangle className="h-4 w-4 text-red-600" />
-          <AlertDescription className="text-red-700 font-medium">
+        <Alert variant="destructive" className="border-red-500 bg-red-50 mb-0 rounded-none text-red-700 px-3 py-2 flex justify-center items-center">
+          <AlertTriangle className="h-3.5 w-3.5 text-red-600 mr-1" />
+          <AlertDescription className="text-red-700 text-sm font-medium">
             You have 2 urgent premium insights waiting!
           </AlertDescription>
         </Alert>
@@ -74,7 +76,7 @@ export function InsightCard({
         </div>
         
         {revenueScore !== undefined && (
-          <div className="mb-6 bg-blue-50 p-3 rounded-lg">
+          <div className="mb-4 bg-blue-50 p-3 rounded-lg">
             <div className="flex items-center mb-2">
               <BarChart className="h-5 w-5 text-blue-600 flex-shrink-0" />
               <p className="ml-3 text-sm font-medium text-blue-700">Revenue Score vs. Competition</p>
@@ -89,6 +91,26 @@ export function InsightCard({
               <span className="text-xs text-blue-700">0</span>
               <span className="text-xs font-medium text-blue-700">{revenueScore}/10</span>
               <span className="text-xs text-blue-700">10</span>
+            </div>
+          </div>
+        )}
+        
+        {healthScore !== undefined && (
+          <div className="mb-6 bg-green-50 p-3 rounded-lg">
+            <div className="flex items-center mb-2">
+              <Award className="h-5 w-5 text-green-600 flex-shrink-0" />
+              <p className="ml-3 text-sm font-medium text-green-700">Business Health Score</p>
+            </div>
+            <div className="relative h-2 bg-green-100 rounded-full overflow-hidden">
+              <div 
+                className="absolute top-0 left-0 h-full bg-green-600 rounded-full"
+                style={{ width: `${(healthScore / 10) * 100}%` }}
+              ></div>
+            </div>
+            <div className="flex justify-between mt-1">
+              <span className="text-xs text-green-700">0</span>
+              <span className="text-xs font-medium text-green-700">{healthScore}/10</span>
+              <span className="text-xs text-green-700">10</span>
             </div>
           </div>
         )}

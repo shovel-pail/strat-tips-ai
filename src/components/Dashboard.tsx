@@ -221,6 +221,8 @@ export function Dashboard({ className }: DashboardProps) {
                             effort={insight.effort}
                             urgency={insight.urgency}
                             industryComparison={insight.industryComparison}
+                            revenueScore={insight.revenueScore}
+                            healthScore={insight.healthScore}
                             className={`animate-slide-up stagger-${index + 1}`}
                             showPremiumAlert={index === 0}
                           />
@@ -346,6 +348,23 @@ export function Dashboard({ className }: DashboardProps) {
                                   ></div>
                                 </div>
                               </div>
+                              
+                              {analysisResults.summary.businessHealthScore && (
+                                <div>
+                                  <div className="flex items-center justify-between mb-1 text-sm">
+                                    <span>Business Health Score</span>
+                                    <span className="font-medium">{analysisResults.summary.businessHealthScore}/10</span>
+                                  </div>
+                                  <div className="h-2 bg-gray-100 rounded-full overflow-hidden">
+                                    <div 
+                                      className="h-full bg-primary rounded-full" 
+                                      style={{ 
+                                        width: `${(analysisResults.summary.businessHealthScore / 10) * 100}%` 
+                                      }}
+                                    ></div>
+                                  </div>
+                                </div>
+                              )}
                             </div>
                             
                             <Button 
