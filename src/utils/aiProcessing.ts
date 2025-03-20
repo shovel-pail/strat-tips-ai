@@ -1,4 +1,3 @@
-
 export interface Insight {
   title: string;
   potentialGain: string;
@@ -106,7 +105,7 @@ export async function generateInsights(data: any): Promise<AnalysisResults> {
       "Implement a tiered rewards structure with clear benefits.",
       "Promote the program to existing customers via email and at point of sale."
     ],
-    effort: customerCount > 10 ? "Hard" : "Medium",
+    effort: "Medium",
     urgency: "🔴 Urgent",
     freeTools: [
       "Loyalty Program Planning Template (Free download from our Resources)",
@@ -181,31 +180,37 @@ export async function generateInsights(data: any): Promise<AnalysisResults> {
     healthScore: Math.min(10, businessHealthScore + 1)
   });
   
+  // Add one more easy insight
   insights.push({
-    title: "Targeted Local Market Expansion Strategy",
-    potentialGain: `$${(revenue * 0.13).toFixed(0)}/month`,
-    explanation: `Analysis of your customer location data reveals untapped opportunities within a 15-mile radius of your primary business location. Strategic micro-targeting could expand your customer base in specific neighborhoods.`,
-    industryComparison: `Top-performing ${industry} businesses in ${location} typically achieve 35% of new business from geographic expansion rather than product diversification.`,
-    benchmark: "A Nielsen study found that 93% of consumers travel 20 minutes or less for everyday purchases. Research by Alignable shows that local businesses that target expansion to adjacent neighborhoods see a 24% increase in new customers over 6 months.",
+    title: "Implement Quick-Win Customer Feedback System",
+    potentialGain: `$${(revenue * 0.04).toFixed(0)}/month`,
+    explanation: "Setting up a simple feedback collection system can uncover immediate improvement opportunities and show customers you value their input.",
+    industryComparison: `Top ${industry} businesses collect feedback from over 30% of their customers, while the average is below 10%.`,
+    benchmark: "Microsoft research found that companies that actively collect and implement customer feedback see a 5-10% increase in revenue within 6 months. A Gartner study revealed that these companies also enjoy 20% higher customer satisfaction scores.",
     steps: [
-      "Map current customer locations to identify concentration and gaps.",
-      `Create targeted advertising campaigns for 3 specific neighborhoods within 15 miles with similar demographics to your top customers.`,
-      "Develop a special 'new neighborhood' offer with tracking code to measure results."
+      "Create a 3-question feedback form using a free tool like Google Forms.",
+      "Add the feedback link to all customer receipts and emails.",
+      "Review feedback weekly and implement one improvement per month."
     ],
-    effort: "Medium",
+    effort: "Easy",
     urgency: "🟡 Important",
     freeTools: [
-      "Google My Business (Free local business listing)",
-      "Google Maps radius tool (Free location targeting)",
-      "Local SEO Checklist (Free download)"
+      "Google Forms (Free survey tool)",
+      "SurveyMonkey (Free tier available)",
+      "Customer Feedback Template (Available in our Resource Library)"
     ],
-    healthScore: Math.min(10, businessHealthScore)
+    healthScore: Math.min(10, businessHealthScore + 1)
   });
 
-  // First sort by effort (Easy -> Medium -> Hard)
-  const effortOrder = { 'Easy': 0, 'Medium': 1, 'Hard': 2 };
+  // Filter to only include Easy and Medium insights
+  const filteredInsights = insights.filter(insight => 
+    insight.effort === 'Easy' || insight.effort === 'Medium'
+  );
   
-  const sortedInsights = [...insights].sort((a, b) => {
+  // First sort by effort (Easy -> Medium)
+  const effortOrder = { 'Easy': 0, 'Medium': 1 };
+  
+  const sortedInsights = [...filteredInsights].sort((a, b) => {
     // First sort by effort level
     const effortComparison = effortOrder[a.effort] - effortOrder[b.effort];
     
