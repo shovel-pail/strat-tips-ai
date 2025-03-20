@@ -1,4 +1,3 @@
-
 import { useState } from 'react';
 import { cn } from '@/lib/utils';
 import { InsightCard } from './InsightCard';
@@ -31,7 +30,6 @@ export function Dashboard({ className }: DashboardProps) {
     setProcessingError(null);
     
     try {
-      // Process the uploaded data with AI
       const results = await generateInsights(data);
       setAnalysisResults(results);
       setProcessingComplete(true);
@@ -52,8 +50,6 @@ export function Dashboard({ className }: DashboardProps) {
   };
   
   const handleDownloadPlan = () => {
-    // In a real implementation, this would generate a PDF summary
-    // For this demo, we'll just show a toast message
     import('sonner').then(({ toast }) => {
       toast.success('Action Plan Downloaded', {
         description: 'Your personalized business action plan has been downloaded.',
@@ -91,10 +87,10 @@ export function Dashboard({ className }: DashboardProps) {
             
             {processingComplete && !processingError && (
               <Button 
-                variant="outline" 
+                variant="gradient" 
                 size="sm" 
                 onClick={handleDownloadPlan}
-                className="flex items-center"
+                className="flex items-center transition-all duration-300 hover:scale-105 shadow-md hover:shadow-lg animate-pulse-slow"
               >
                 <Download className="h-4 w-4 mr-2" />
                 Download Action Plan
@@ -253,7 +249,6 @@ export function Dashboard({ className }: DashboardProps) {
                             </div>
                             
                             <div className="space-y-3">
-                              {/* Performance metrics */}
                               <div>
                                 <div className="flex items-center justify-between mb-1 text-sm">
                                   <span>Revenue Growth</span>
@@ -300,7 +295,12 @@ export function Dashboard({ className }: DashboardProps) {
                               </div>
                             </div>
                             
-                            <Button variant="outline" size="sm" className="w-full" onClick={handleDownloadPlan}>
+                            <Button 
+                              variant="gradient" 
+                              size="sm" 
+                              className="w-full transition-all duration-300 hover:scale-105 shadow-md hover:shadow-lg animate-pulse-slow" 
+                              onClick={handleDownloadPlan}
+                            >
                               <Download className="h-4 w-4 mr-2" />
                               Download Full Report
                             </Button>
