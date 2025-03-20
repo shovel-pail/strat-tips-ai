@@ -8,6 +8,7 @@ export interface Insight {
   urgency?: '🔴 Urgent' | '🟡 Important' | '🟢 Long-Term';
   industryComparison?: string;
   freeTools?: string[];
+  revenueScore?: number;
 }
 
 export interface AnalysisResults {
@@ -25,45 +26,35 @@ export interface AnalysisResults {
   };
 }
 
-// For this demo version, we're generating insights based on some basic patterns in the data
-// In a real implementation, this would connect to an actual AI service
 export async function generateInsights(data: any): Promise<AnalysisResults> {
-  // Simulate processing time to make the AI analysis feel more realistic
   await new Promise(resolve => setTimeout(resolve, 3000));
   
-  // Extract more detailed business information
   const customerCount = data?.customers?.length || 0;
   const hasEmail = data?.customers?.some((customer: any) => customer.email?.includes('@'));
   const hasPhoneNumbers = data?.customers?.some((customer: any) => customer.phone?.includes('-'));
   const industry = data?.userInfo?.industry || 'Retail';
   const location = data?.userInfo?.location || 'United States';
   
-  // Generate revenue based on customer count
   const revenue = 15000 + (customerCount * 500);
   
-  // Generate growth rate with slight randomization
   const growthBase = customerCount > 8 ? 4.5 : 2.1;
   const growth = (growthBase + (Math.random() * 0.8)).toFixed(1);
   
-  // Determine retention rate
   const retentionBase = 68 + (customerCount * 0.5);
   const retention = Math.min(92, retentionBase);
   
-  // Generate profit margins
   const profitMargins = `${Math.floor(20 + Math.random() * 15)}%`;
   
-  // Generate ad spend and conversion
   const adSpend = Math.floor(revenue * 0.08);
   const conversionRate = (2 + Math.random() * 3).toFixed(1);
   const adSpendConversion = `$${adSpend.toLocaleString()} / ${conversionRate}%`;
   
-  // Generate urgency levels
   const urgencyLevels: Array<'🔴 Urgent' | '🟡 Important' | '🟢 Long-Term'> = ['🔴 Urgent', '🟡 Important', '🟢 Long-Term'];
   
-  // Generate custom insights based on data patterns
   const insights: Insight[] = [];
   
-  // Email marketing insight if we have email addresses
+  const baseRevenueScore = Math.min(8, Math.max(3, Math.floor(customerCount / 2) + (parseFloat(growth) > 3 ? 2 : 0)));
+  
   if (hasEmail) {
     insights.push({
       title: "Implement Segmented Email Marketing Campaign",
@@ -82,11 +73,11 @@ export async function generateInsights(data: any): Promise<AnalysisResults> {
         "Mailchimp (Free tier up to 2,000 contacts)",
         "HubSpot Email Marketing (Free tier available)",
         "Segmentation Template Spreadsheet (Available on our Resources page)"
-      ]
+      ],
+      revenueScore: baseRevenueScore - 1 + Math.floor(Math.random() * 3)
     });
   }
   
-  // Customer retention insight
   insights.push({
     title: "Launch Customer Loyalty Program",
     potentialGain: `$${(revenue * 0.09).toFixed(0)}/month`,
@@ -104,10 +95,10 @@ export async function generateInsights(data: any): Promise<AnalysisResults> {
       "Loyalty Program Planning Template (Free download from our Resources)",
       "Open Loyalty (Open-source loyalty program software)",
       "Customer Rewards Calculator Spreadsheet"
-    ]
+    ],
+    revenueScore: baseRevenueScore + Math.floor(Math.random() * 2)
   });
   
-  // Phone-based outreach if we have phone numbers
   if (hasPhoneNumbers) {
     insights.push({
       title: "Develop Proactive Customer Outreach Strategy",
@@ -126,11 +117,11 @@ export async function generateInsights(data: any): Promise<AnalysisResults> {
         "Google Voice (Free business phone number)",
         "Call Script Template (Available in our Resource Library)",
         "Customer Segmentation Calculator"
-      ]
+      ],
+      revenueScore: baseRevenueScore + (Math.random() > 0.5 ? 1 : 0)
     });
   }
   
-  // Pricing optimization insight
   insights.push({
     title: "Implement Data-Driven Pricing Optimization",
     potentialGain: `$${(revenue * 0.11).toFixed(0)}/month`,
@@ -148,10 +139,10 @@ export async function generateInsights(data: any): Promise<AnalysisResults> {
       "Price Elasticity Calculator (Excel template)",
       "Competitor Price Monitoring Template",
       "A/B Testing Framework for Pricing"
-    ]
+    ],
+    revenueScore: baseRevenueScore + 2
   });
   
-  // Operational efficiency insight
   insights.push({
     title: "Streamline Operational Workflows",
     potentialGain: `$${(revenue * 0.05).toFixed(0)}/month`,
@@ -169,10 +160,10 @@ export async function generateInsights(data: any): Promise<AnalysisResults> {
       "Process Mapping Template (Free Flowchart Tool)",
       "Trello (Free project management tool)",
       "Time Tracking Spreadsheet Template"
-    ]
+    ],
+    revenueScore: baseRevenueScore - 1
   });
   
-  // Local market expansion insight
   insights.push({
     title: "Targeted Local Market Expansion Strategy",
     potentialGain: `$${(revenue * 0.13).toFixed(0)}/month`,
@@ -190,20 +181,18 @@ export async function generateInsights(data: any): Promise<AnalysisResults> {
       "Google My Business (Free local business listing)",
       "Google Maps radius tool (Free location targeting)",
       "Local SEO Checklist (Free download)"
-    ]
+    ],
+    revenueScore: baseRevenueScore + 1 + Math.floor(Math.random() * 2)
   });
   
-  // Randomize the order of insights but keep them consistent with the urgency levels
   const shuffledInsights = [...insights]
     .sort((a, b) => {
-      // Sort by urgency first, then randomly if same urgency
       const urgencyOrder = { '🔴 Urgent': 0, '🟡 Important': 1, '🟢 Long-Term': 2 };
       const aValue = a.urgency ? urgencyOrder[a.urgency] : 3;
       const bValue = b.urgency ? urgencyOrder[b.urgency] : 3;
       return aValue - bValue || Math.random() - 0.5;
     });
   
-  // Take the first 4 insights, making sure to include at least one urgent if available
   let selectedInsights = shuffledInsights.slice(0, 4);
   
   return {
