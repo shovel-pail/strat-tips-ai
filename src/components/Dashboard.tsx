@@ -1,3 +1,4 @@
+
 import { useState } from 'react';
 import { cn } from '@/lib/utils';
 import { InsightCard } from './InsightCard';
@@ -51,8 +52,11 @@ export function Dashboard({ className }: DashboardProps) {
           fileName: data.fileName || '',
           fileSize: data.fileSize || 0,
           fileType: data.fileType || '',
-          insights: results.insights || [], // Store all insights, including hidden ones
+          customers: data.customers || [],  // Store customer data
+          insights: results.insights || [], // Store all insights
         };
+        
+        console.log('About to store free submission lead:', lead);
         
         const existingLeads = JSON.parse(localStorage.getItem('businessInsightLeads') || '[]');
         localStorage.setItem('businessInsightLeads', JSON.stringify([...existingLeads, lead]));

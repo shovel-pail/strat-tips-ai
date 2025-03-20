@@ -162,22 +162,8 @@ export function FileUpload({ onFileProcessed, className }: FileUploadProps) {
       userInfo
     };
     
-    // Create a lead object
-    const lead = {
-      id: Date.now().toString(),
-      name: userInfo.name,
-      email: userInfo.email,
-      company: userInfo.company,
-      industry: userInfo.industry,
-      location: userInfo.location,
-      source: 'file-upload' as const,
-      timestamp: new Date().toISOString(),
-      fileData
-    };
-    
-    // Save to localStorage
-    const existingLeads = JSON.parse(localStorage.getItem('businessInsightLeads') || '[]');
-    localStorage.setItem('businessInsightLeads', JSON.stringify([...existingLeads, lead]));
+    // Log for debugging
+    console.log('File upload complete data:', completeData);
     
     // Pass the combined data to the parent component
     onFileProcessed(completeData);
@@ -185,6 +171,9 @@ export function FileUpload({ onFileProcessed, className }: FileUploadProps) {
     toast.success('File processed successfully', {
       description: `Extracted ${fileData.customers.length} customer records.`
     });
+    
+    // Close the user info form
+    setUserInfoOpen(false);
   };
 
   return (

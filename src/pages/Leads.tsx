@@ -1,3 +1,4 @@
+
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { 
@@ -42,17 +43,22 @@ type Lead = {
   source: 'premium-insight' | 'file-upload' | 'free-submission';
   timestamp: string;
   fileData?: any;
+  fileName?: string;
+  fileSize?: number;
+  fileType?: string;
+  customers?: any[];
   insights?: any[];
 };
 
 export default function Leads() {
   const [leads, setLeads] = useState<Lead[]>([]);
-  const [selectedInsights, setSelectedInsights] = useState<any[]>([]);
   
   useEffect(() => {
     // Load leads from localStorage
     const storedLeads = localStorage.getItem('businessInsightLeads');
+    
     if (storedLeads) {
+      console.log('Found stored leads:', JSON.parse(storedLeads));
       setLeads(JSON.parse(storedLeads));
     } else {
       // Set some sample leads for demo purposes
