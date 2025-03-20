@@ -1,4 +1,3 @@
-
 import { useState } from 'react';
 import { cn } from '@/lib/utils';
 import { InsightCard } from './InsightCard';
@@ -11,7 +10,6 @@ import { generateInsights, type AnalysisResults, type Insight } from '@/utils/ai
 import { UserInfo } from './UserInfoForm';
 import { Card, CardContent, CardHeader, CardTitle } from './ui/card';
 import { toast } from 'sonner';
-import { Link } from 'react-router-dom';
 
 type DashboardProps = {
   className?: string;
@@ -94,13 +92,6 @@ export function Dashboard({ className }: DashboardProps) {
             We'll analyze your customer data to generate actionable profitability insights.
           </p>
           <FileUpload onFileProcessed={handleFileProcessed} />
-          
-          {/* Add a link to view all leads */}
-          <div className="mt-4 text-center">
-            <Link to="/leads" className="text-sm text-muted-foreground hover:text-primary transition-colors">
-              View all leads →
-            </Link>
-          </div>
         </div>
       )}
       

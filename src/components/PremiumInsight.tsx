@@ -1,4 +1,3 @@
-
 import { useState } from 'react';
 import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
@@ -421,10 +420,8 @@ export function PremiumInsight({ title, className }: PremiumInsightProps) {
         </div>
       </div>
       
-      <div className="px-6 py-3 bg-muted/20 border-t flex justify-between items-center">
-        <Link to="/leads" className="text-xs text-muted-foreground hover:text-primary transition-colors">
-          View all leads
-        </Link>
+      <div className="px-6 py-3 bg-muted/20 border-t">
+        {/* Empty div to maintain spacing, but without the View leads link */}
       </div>
     </div>
   );

@@ -5,7 +5,6 @@ import { Progress } from '@/components/ui/progress';
 import { Upload, File, X, Check, AlertCircle } from 'lucide-react';
 import { toast } from 'sonner';
 import { UserInfoForm, UserInfo } from './UserInfoForm';
-import { Link } from 'react-router-dom';
 
 type FileUploadProps = {
   onFileProcessed: (data: any) => void;
@@ -264,17 +263,11 @@ export function FileUpload({ onFileProcessed, className }: FileUploadProps) {
         )}
       </div>
       
-      <div className="mt-3 flex items-start justify-between">
-        <div className="flex items-start">
-          <AlertCircle className="h-4 w-4 text-muted-foreground mr-2 mt-0.5 flex-shrink-0" />
-          <p className="text-xs text-muted-foreground">
-            Your data is securely processed. We don't store your raw files after analysis is complete.
-          </p>
-        </div>
-        
-        <Link to="/leads" className="text-xs text-muted-foreground hover:text-primary transition-colors">
-          View all leads
-        </Link>
+      <div className="mt-3 flex items-start">
+        <AlertCircle className="h-4 w-4 text-muted-foreground mr-2 mt-0.5 flex-shrink-0" />
+        <p className="text-xs text-muted-foreground">
+          Your data is securely processed. We don't store your raw files after analysis is complete.
+        </p>
       </div>
       
       <UserInfoForm 
