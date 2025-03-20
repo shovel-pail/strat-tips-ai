@@ -9,7 +9,6 @@ export interface Insight {
   urgency?: '🔴 Urgent' | '🟡 Important' | '🟢 Long-Term';
   industryComparison?: string;
   freeTools?: string[];
-  revenueScore?: number;
   healthScore?: number;
 }
 
@@ -73,16 +72,6 @@ export async function generateInsights(data: any): Promise<AnalysisResults> {
   
   const insights: Insight[] = [];
   
-  const baseRevenueScore = Math.min(8, Math.max(3, Math.floor(customerCount / 2) + (parseFloat(growth) > 3 ? 2 : 0)));
-  
-  // Generate online competitor revenue comparison score
-  const generateCompetitorScore = (baseScore: number) => {
-    // Vary the score slightly for each insight
-    let competitorScore = baseScore + (Math.random() > 0.5 ? 1 : -1) * Math.floor(Math.random() * 2);
-    // Ensure within range
-    return Math.max(1, Math.min(10, competitorScore));
-  };
-  
   if (hasEmail) {
     insights.push({
       title: "Implement Segmented Email Marketing Campaign",
@@ -102,7 +91,6 @@ export async function generateInsights(data: any): Promise<AnalysisResults> {
         "HubSpot Email Marketing (Free tier available)",
         "Segmentation Template Spreadsheet (Available on our Resources page)"
       ],
-      revenueScore: generateCompetitorScore(baseRevenueScore),
       healthScore: Math.max(1, Math.min(10, businessHealthScore + 1))
     });
   }
@@ -125,7 +113,6 @@ export async function generateInsights(data: any): Promise<AnalysisResults> {
       "Open Loyalty (Open-source loyalty program software)",
       "Customer Rewards Calculator Spreadsheet"
     ],
-    revenueScore: generateCompetitorScore(baseRevenueScore),
     healthScore: businessHealthScore
   });
   
@@ -148,7 +135,6 @@ export async function generateInsights(data: any): Promise<AnalysisResults> {
         "Call Script Template (Available in our Resource Library)",
         "Customer Segmentation Calculator"
       ],
-      revenueScore: generateCompetitorScore(baseRevenueScore),
       healthScore: Math.max(1, Math.min(10, businessHealthScore + 1))
     });
   }
@@ -171,7 +157,6 @@ export async function generateInsights(data: any): Promise<AnalysisResults> {
       "Competitor Price Monitoring Template",
       "A/B Testing Framework for Pricing"
     ],
-    revenueScore: generateCompetitorScore(baseRevenueScore + 2),
     healthScore: Math.max(1, Math.min(10, businessHealthScore + 2))
   });
   
@@ -193,7 +178,6 @@ export async function generateInsights(data: any): Promise<AnalysisResults> {
       "Trello (Free project management tool)",
       "Time Tracking Spreadsheet Template"
     ],
-    revenueScore: generateCompetitorScore(baseRevenueScore - 1),
     healthScore: Math.min(10, businessHealthScore + 1)
   });
   
@@ -215,7 +199,6 @@ export async function generateInsights(data: any): Promise<AnalysisResults> {
       "Google Maps radius tool (Free location targeting)",
       "Local SEO Checklist (Free download)"
     ],
-    revenueScore: generateCompetitorScore(baseRevenueScore + 1),
     healthScore: Math.min(10, businessHealthScore)
   });
 

@@ -15,7 +15,6 @@ type InsightCardProps = {
   urgency?: '🔴 Urgent' | '🟡 Important' | '🟢 Long-Term';
   industryComparison?: string;
   freeTools?: string[];
-  revenueScore?: number;
   healthScore?: number;
   className?: string;
   showPremiumAlert?: boolean;
@@ -31,7 +30,6 @@ export function InsightCard({
   urgency,
   industryComparison,
   freeTools,
-  revenueScore,
   healthScore,
   className,
   showPremiumAlert,
@@ -74,26 +72,6 @@ export function InsightCard({
             <p className="font-medium">{potentialGain}</p>
           </div>
         </div>
-        
-        {revenueScore !== undefined && (
-          <div className="mb-4 bg-blue-50 p-3 rounded-lg">
-            <div className="flex items-center mb-2">
-              <BarChart className="h-5 w-5 text-blue-600 flex-shrink-0" />
-              <p className="ml-3 text-sm font-medium text-blue-700">Revenue Score vs. Competition</p>
-            </div>
-            <div className="relative h-2 bg-blue-100 rounded-full overflow-hidden">
-              <div 
-                className="absolute top-0 left-0 h-full bg-blue-600 rounded-full"
-                style={{ width: `${(revenueScore / 10) * 100}%` }}
-              ></div>
-            </div>
-            <div className="flex justify-between mt-1">
-              <span className="text-xs text-blue-700">0</span>
-              <span className="text-xs font-medium text-blue-700">{revenueScore}/10</span>
-              <span className="text-xs text-blue-700">10</span>
-            </div>
-          </div>
-        )}
         
         {healthScore !== undefined && (
           <div className="mb-6 bg-green-50 p-3 rounded-lg">
