@@ -5,6 +5,7 @@ import { Header } from '@/components/Header';
 import { Dashboard } from '@/components/Dashboard';
 import { Footer } from '@/components/Footer';
 import { ArrowDown, BarChart2, FileText, Brain, Zap, ArrowRight } from 'lucide-react';
+import { Link } from 'react-router-dom';
 
 const Index = () => {
   const dashboardRef = useRef<HTMLDivElement>(null);
@@ -40,9 +41,11 @@ const Index = () => {
                 Get Started
                 <ArrowRight className="ml-2 h-4 w-4" />
               </Button>
-              <Button variant="outline" size="lg" className="shadow-sm hover:shadow-md">
-                Learn More
-              </Button>
+              <Link to="/dashboard">
+                <Button variant="outline" size="lg" className="shadow-sm hover:shadow-md">
+                  Go to Dashboard
+                </Button>
+              </Link>
             </div>
             
             <div className="mt-16 flex justify-center animate-slide-down stagger-3">

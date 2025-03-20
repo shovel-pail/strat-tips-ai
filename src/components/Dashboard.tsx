@@ -1,3 +1,4 @@
+
 import { useState } from 'react';
 import { cn } from '@/lib/utils';
 import { InsightCard } from './InsightCard';
@@ -9,6 +10,8 @@ import { ArrowLeft, Upload, CheckCircle, User, Download, BarChart2 } from 'lucid
 import { generateInsights, type AnalysisResults, type Insight } from '@/utils/aiProcessing';
 import { UserInfo } from './UserInfoForm';
 import { Card, CardContent, CardHeader, CardTitle } from './ui/card';
+import { toast } from 'sonner';
+import { Link } from 'react-router-dom';
 
 type DashboardProps = {
   className?: string;
@@ -33,6 +36,28 @@ export function Dashboard({ className }: DashboardProps) {
       const results = await generateInsights(data);
       setAnalysisResults(results);
       setProcessingComplete(true);
+      
+      // Store lead in localStorage from free submission
+      if (data.userInfo) {
+        const lead = {
+          id: Date.now().toString(),
+          name: data.userInfo.name,
+          email: data.userInfo.email,
+          company: data.userInfo.company || '',
+          industry: data.userInfo.industry || '',
+          location: data.userInfo.location || '',
+          source: 'free-submission',
+          timestamp: new Date().toISOString(),
+          fileName: data.fileName || '',
+          fileSize: data.fileSize || 0,
+          fileType: data.fileType || '',
+        };
+        
+        const existingLeads = JSON.parse(localStorage.getItem('businessInsightLeads') || '[]');
+        localStorage.setItem('businessInsightLeads', JSON.stringify([...existingLeads, lead]));
+        
+        console.log('Free submission lead stored:', lead);
+      }
     } catch (error) {
       console.error('Error processing data:', error);
       setProcessingError('There was an error analyzing your data. Please try again.');
@@ -50,10 +75,8 @@ export function Dashboard({ className }: DashboardProps) {
   };
   
   const handleDownloadPlan = () => {
-    import('sonner').then(({ toast }) => {
-      toast.success('Action Plan Downloaded', {
-        description: 'Your personalized business action plan has been downloaded.',
-      });
+    toast.success('Action Plan Downloaded', {
+      description: 'Your personalized business action plan has been downloaded.',
     });
   };
 
@@ -66,6 +89,13 @@ export function Dashboard({ className }: DashboardProps) {
             We'll analyze your customer data to generate actionable profitability insights.
           </p>
           <FileUpload onFileProcessed={handleFileProcessed} />
+          
+          {/* Add a link to view all leads */}
+          <div className="mt-4 text-center">
+            <Link to="/leads" className="text-sm text-muted-foreground hover:text-primary transition-colors">
+              View all leads →
+            </Link>
+          </div>
         </div>
       )}
       
