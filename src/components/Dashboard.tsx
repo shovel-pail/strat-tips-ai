@@ -5,11 +5,13 @@ import { PremiumInsight } from './PremiumInsight';
 import { Button } from '@/components/ui/button';
 import { FileUpload } from './FileUpload';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { ArrowLeft, Upload, CheckCircle, User, Download, BarChart2 } from 'lucide-react';
+import { ArrowLeft, Upload, CheckCircle, User, Download, BarChart2, Lock } from 'lucide-react';
 import { generateInsights, type AnalysisResults, type Insight } from '@/utils/aiProcessing';
 import { UserInfo } from './UserInfoForm';
 import { Card, CardContent, CardHeader, CardTitle } from './ui/card';
 import { toast } from 'sonner';
+import { PinCodeDialog } from './PinCodeDialog';
+import { useNavigate } from 'react-router-dom';
 
 type DashboardProps = {
   className?: string;
@@ -22,6 +24,8 @@ export function Dashboard({ className }: DashboardProps) {
   const [processingComplete, setProcessingComplete] = useState(false);
   const [analysisResults, setAnalysisResults] = useState<AnalysisResults | null>(null);
   const [processingError, setProcessingError] = useState<string | null>(null);
+  const [showAllInsights, setShowAllInsights] = useState(false);
+  const navigate = useNavigate();
   
   const handleFileProcessed = async (data: any) => {
     setUploadedData(data);
@@ -35,9 +39,7 @@ export function Dashboard({ className }: DashboardProps) {
       setAnalysisResults(results);
       setProcessingComplete(true);
       
-      // Store lead in localStorage from free submission
       if (data.userInfo) {
-        // Create the lead object with all insights data
         const lead = {
           id: Date.now().toString(),
           name: data.userInfo.name,
@@ -50,8 +52,8 @@ export function Dashboard({ className }: DashboardProps) {
           fileName: data.fileName || '',
           fileSize: data.fileSize || 0,
           fileType: data.fileType || '',
-          customers: data.customers || [],  // Store customer data
-          insights: results.insights || [], // Store all insights
+          customers: data.customers || [],
+          insights: results.insights || [],
         };
         
         console.log('About to store free submission lead:', lead);
@@ -81,6 +83,17 @@ export function Dashboard({ className }: DashboardProps) {
     toast.success('Action Plan Downloaded', {
       description: 'Your personalized business action plan has been downloaded.',
     });
+  };
+
+  const handleAllInsightsAccess = () => {
+    setShowAllInsights(true);
+    toast.success('All Insights Unlocked', {
+      description: 'You now have access to all premium insights.'
+    });
+  };
+
+  const handleLeadsAccess = () => {
+    navigate('/leads');
   };
 
   return (
@@ -180,7 +193,19 @@ export function Dashboard({ className }: DashboardProps) {
                   <TabsList>
                     <TabsTrigger value="insights">Business Insights</TabsTrigger>
                     <TabsTrigger value="data">Data Summary</TabsTrigger>
-                    <TabsTrigger value="all-insights">All Insights</TabsTrigger>
+                    {showAllInsights ? (
+                      <TabsTrigger value="all-insights">All Insights</TabsTrigger>
+                    ) : (
+                      <PinCodeDialog 
+                        title="Unlock All Insights" 
+                        description="Enter the PIN code to access all premium insights."
+                        onSuccess={handleAllInsightsAccess}
+                      >
+                        <div className="inline-flex items-center justify-center whitespace-nowrap rounded-sm px-3 py-1.5 text-sm font-medium ring-offset-background transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 data-[state=active]:bg-background data-[state=active]:text-foreground data-[state=active]:shadow-sm opacity-50 cursor-pointer">
+                          All Insights <Lock className="ml-1 h-3 w-3" />
+                        </div>
+                      </PinCodeDialog>
+                    )}
                   </TabsList>
                   <TabsContent value="insights">
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
@@ -432,6 +457,18 @@ export function Dashboard({ className }: DashboardProps) {
           )}
         </div>
       )}
+      
+      <div className="mt-8 text-center">
+        <PinCodeDialog 
+          title="Access Business Leads" 
+          description="Enter the PIN code to view all business leads."
+          onSuccess={handleLeadsAccess}
+        >
+          <Button variant="outline" size="sm">
+            View All Leads <Lock className="ml-2 h-3 w-3" />
+          </Button>
+        </PinCodeDialog>
+      </div>
     </div>
   );
 }

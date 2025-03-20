@@ -2,7 +2,7 @@
 import { cn } from '@/lib/utils';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { Award, DollarSign, TrendingUp, Clock, Globe, Phone, Wrench } from 'lucide-react';
+import { Award, DollarSign, TrendingUp, Clock, Globe, Wrench } from 'lucide-react';
 
 type InsightCardProps = {
   title: string;
@@ -34,14 +34,6 @@ export function InsightCard({
     Medium: 'bg-amber-50 text-amber-700',
     Hard: 'bg-red-50 text-red-700',
   }[effort];
-
-  const handleScheduleCall = () => {
-    import('sonner').then(({ toast }) => {
-      toast.success('Call Request Submitted', {
-        description: 'Our implementation coach will contact you shortly.',
-      });
-    });
-  };
 
   return (
     <div className={cn(
@@ -129,15 +121,6 @@ export function InsightCard({
               </ul>
             </div>
           )}
-
-          <Button 
-            variant="gradient" 
-            className="w-full mt-4 hover:scale-105 transition-all duration-300 shadow-sm hover:shadow-md"
-            onClick={handleScheduleCall}
-          >
-            <Phone className="h-4 w-4 mr-2" />
-            Schedule a Free Call with an Implementation Coach
-          </Button>
         </div>
       </div>
     </div>
