@@ -46,9 +46,9 @@ export function InsightCard({
       className
     )}>
       {showPremiumAlert && (
-        <Alert variant="destructive" className="border-red-500 bg-red-50 mb-0 rounded-none text-red-700 px-3 py-2 flex justify-center items-center">
-          <AlertTriangle className="h-3.5 w-3.5 text-red-600 mr-1" />
-          <AlertDescription className="text-red-700 text-sm font-medium">
+        <Alert variant="destructive" className="border-red-500 bg-red-50 mb-0 rounded-none text-red-700 py-1.5 flex justify-center items-center">
+          <AlertTriangle className="h-3 w-3 text-red-600 mr-1" />
+          <AlertDescription className="text-red-700 text-xs font-medium">
             You have 2 urgent premium insights waiting!
           </AlertDescription>
         </Alert>
