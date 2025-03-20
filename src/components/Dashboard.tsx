@@ -96,12 +96,6 @@ export function Dashboard({ className }: DashboardProps) {
     navigate('/leads');
   };
 
-  const handleScheduleCall = () => {
-    toast.success('Call Scheduled', {
-      description: 'Our implementation coach will contact you soon.',
-    });
-  };
-
   return (
     <div className={cn("w-full", className)}>
       {step === 'upload' && (
@@ -239,17 +233,6 @@ export function Dashboard({ className }: DashboardProps) {
                           className="animate-slide-up stagger-3"
                         />
                       )}
-                    </div>
-                    
-                    <div className="mt-8 flex justify-center">
-                      <Button 
-                        variant="gradient" 
-                        onClick={handleScheduleCall}
-                        className="shadow-md hover:shadow-lg transition-all duration-300 hover:scale-105"
-                      >
-                        <Calendar className="mr-2 h-4 w-4" />
-                        Schedule a Free Call with an Implementation Coach
-                      </Button>
                     </div>
                   </TabsContent>
                   <TabsContent value="data">

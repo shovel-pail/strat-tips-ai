@@ -171,7 +171,7 @@ export function InsightCard({
               onClick={handleScheduleCall}
             >
               <Headphones className="mr-2 h-4 w-4" />
-              Schedule Implementation Call
+              Schedule a Free Call with an Implementation Coach
             </Button>
           </div>
         </div>
