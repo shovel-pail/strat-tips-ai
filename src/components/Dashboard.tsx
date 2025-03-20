@@ -5,7 +5,7 @@ import { PremiumInsight } from './PremiumInsight';
 import { Button } from '@/components/ui/button';
 import { FileUpload } from './FileUpload';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { ArrowLeft, Upload, CheckCircle, User, Download, BarChart2, Lock } from 'lucide-react';
+import { ArrowLeft, Upload, CheckCircle, User, Download, BarChart2, Lock, Calendar, Headphones } from 'lucide-react';
 import { generateInsights, type AnalysisResults, type Insight } from '@/utils/aiProcessing';
 import { UserInfo } from './UserInfoForm';
 import { Card, CardContent, CardHeader, CardTitle } from './ui/card';
@@ -94,6 +94,12 @@ export function Dashboard({ className }: DashboardProps) {
 
   const handleLeadsAccess = () => {
     navigate('/leads');
+  };
+
+  const handleScheduleCall = () => {
+    toast.success('Call Scheduled', {
+      description: 'Our implementation coach will contact you soon.',
+    });
   };
 
   return (
@@ -233,6 +239,17 @@ export function Dashboard({ className }: DashboardProps) {
                           className="animate-slide-up stagger-3"
                         />
                       )}
+                    </div>
+                    
+                    <div className="mt-8 flex justify-center">
+                      <Button 
+                        variant="gradient" 
+                        onClick={handleScheduleCall}
+                        className="shadow-md hover:shadow-lg transition-all duration-300 hover:scale-105"
+                      >
+                        <Calendar className="mr-2 h-4 w-4" />
+                        Schedule a Free Call with an Implementation Coach
+                      </Button>
                     </div>
                   </TabsContent>
                   <TabsContent value="data">
@@ -479,3 +496,4 @@ export function Dashboard({ className }: DashboardProps) {
     </div>
   );
 }
+
