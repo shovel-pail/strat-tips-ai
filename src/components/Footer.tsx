@@ -1,7 +1,8 @@
 
-import { Github, Twitter, Linkedin } from 'lucide-react';
+import { Github, Twitter, Linkedin, Rocket } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
+import { Link } from 'react-router-dom';
 
 type FooterProps = {
   className?: string;
@@ -98,9 +99,14 @@ export function Footer({ className }: FooterProps) {
           </div>
           
           <div className="pt-8 mt-8 border-t border-border flex flex-col md:flex-row justify-between items-center">
-            <p className="text-xs text-muted-foreground">
-              &copy; {currentYear} Strat.Tips. All rights reserved.
-            </p>
+            <div className="flex flex-col md:flex-row md:items-center space-y-2 md:space-y-0 md:space-x-4">
+              <p className="text-xs text-muted-foreground">
+                &copy; {currentYear} Strat.Tips. All rights reserved.
+              </p>
+              <Link to="/leads" className="text-xs text-primary hover:underline transition-colors">
+                View all leads
+              </Link>
+            </div>
             <div className="flex space-x-6 mt-4 md:mt-0">
               <a href="#" className="text-xs text-muted-foreground hover:text-primary transition-colors">
                 Privacy Policy

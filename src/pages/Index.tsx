@@ -1,10 +1,9 @@
-
 import { useRef } from 'react';
 import { Button } from '@/components/ui/button';
 import { Header } from '@/components/Header';
 import { Dashboard } from '@/components/Dashboard';
 import { Footer } from '@/components/Footer';
-import { ArrowDown, BarChart2, FileText, Brain, Zap, ArrowRight } from 'lucide-react';
+import { ArrowDown, BarChart2, FileText, Brain, Zap, ArrowRight, Rocket } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
 const Index = () => {
@@ -24,7 +23,7 @@ const Index = () => {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative">
           <div className="max-w-4xl mx-auto text-center">
             <div className="inline-flex items-center px-3 py-1.5 rounded-full bg-primary/10 text-primary text-sm font-medium mb-6 animate-fade-in">
-              <span className="flex h-2 w-2 rounded-full bg-primary mr-2"></span>
+              <Rocket className="h-4 w-4 mr-2" />
               AI-Powered Business Insights
             </div>
             
