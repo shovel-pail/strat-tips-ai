@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { 
@@ -130,10 +129,7 @@ export default function Leads() {
     downloadAnchorNode.remove();
   };
 
-  const viewInsights = (insights: any[]) => {
-    setSelectedInsights(insights);
-  };
-
+  
   const getSourceLabel = (source: string) => {
     switch(source) {
       case 'premium-insight':
