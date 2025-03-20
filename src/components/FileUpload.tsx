@@ -5,6 +5,7 @@ import { Button } from '@/components/ui/button';
 import { Progress } from '@/components/ui/progress';
 import { Upload, File, X, Check, AlertCircle } from 'lucide-react';
 import { toast } from 'sonner';
+import { UserInfoForm, UserInfo } from './UserInfoForm';
 
 type FileUploadProps = {
   onFileProcessed: (data: any) => void;
@@ -16,6 +17,8 @@ export function FileUpload({ onFileProcessed, className }: FileUploadProps) {
   const [uploading, setUploading] = useState(false);
   const [uploadProgress, setUploadProgress] = useState(0);
   const [uploadedFile, setUploadedFile] = useState<File | null>(null);
+  const [userInfoOpen, setUserInfoOpen] = useState(false);
+  const [fileData, setFileData] = useState<any>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const allowedFileTypes = [
@@ -102,10 +105,8 @@ export function FileUpload({ onFileProcessed, className }: FileUploadProps) {
             try {
               const extractedData = await extractDataFromFile(file);
               setUploading(false);
-              onFileProcessed(extractedData);
-              toast.success('File processed successfully', {
-                description: `Extracted ${extractedData.customers.length} customer records.`
-              });
+              setFileData(extractedData);
+              setUserInfoOpen(true); // Open user info form when upload is complete
             } catch (error) {
               setUploading(false);
               console.error('Error extracting data:', error);
@@ -152,6 +153,21 @@ export function FileUpload({ onFileProcessed, className }: FileUploadProps) {
     setUploading(false);
     setUploadProgress(0);
     setUploadedFile(null);
+  };
+  
+  const handleUserInfoSubmit = (userInfo: UserInfo) => {
+    // Combine file data with user info
+    const completeData = {
+      ...fileData,
+      userInfo
+    };
+    
+    // Pass the combined data to the parent component
+    onFileProcessed(completeData);
+    
+    toast.success('File processed successfully', {
+      description: `Extracted ${fileData.customers.length} customer records.`
+    });
   };
 
   return (
@@ -248,6 +264,12 @@ export function FileUpload({ onFileProcessed, className }: FileUploadProps) {
           Your data is securely processed. We don't store your raw files after analysis is complete.
         </p>
       </div>
+      
+      <UserInfoForm 
+        isOpen={userInfoOpen}
+        onClose={() => setUserInfoOpen(false)}
+        onSubmit={handleUserInfoSubmit}
+      />
     </div>
   );
 }

@@ -1,39 +1,36 @@
-
 import { useState } from 'react';
 import { cn } from '@/lib/utils';
 import { InsightCard } from './InsightCard';
 import { PremiumInsight } from './PremiumInsight';
 import { Button } from '@/components/ui/button';
 import { FileUpload } from './FileUpload';
-import { UserAgreement } from './UserAgreement';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { ArrowLeft, Upload, CheckCircle } from 'lucide-react';
+import { ArrowLeft, Upload, CheckCircle, User } from 'lucide-react';
 import { generateInsights, type AnalysisResults, type Insight } from '@/utils/aiProcessing';
+import { UserInfo } from './UserInfoForm';
 
 type DashboardProps = {
   className?: string;
 };
 
 export function Dashboard({ className }: DashboardProps) {
-  const [step, setStep] = useState<'upload' | 'agreement' | 'insights'>('upload');
+  const [step, setStep] = useState<'upload' | 'insights'>('upload');
   const [uploadedData, setUploadedData] = useState<any>(null);
+  const [userInfo, setUserInfo] = useState<UserInfo | null>(null);
   const [processingComplete, setProcessingComplete] = useState(false);
   const [analysisResults, setAnalysisResults] = useState<AnalysisResults | null>(null);
   const [processingError, setProcessingError] = useState<string | null>(null);
   
-  const handleFileProcessed = (data: any) => {
+  const handleFileProcessed = async (data: any) => {
     setUploadedData(data);
-    setStep('agreement');
-  };
-
-  const handleAgreementAccepted = async () => {
+    setUserInfo(data.userInfo);
     setStep('insights');
     setProcessingComplete(false);
     setProcessingError(null);
     
     try {
       // Process the uploaded data with AI
-      const results = await generateInsights(uploadedData);
+      const results = await generateInsights(data);
       setAnalysisResults(results);
       setProcessingComplete(true);
     } catch (error) {
@@ -46,6 +43,7 @@ export function Dashboard({ className }: DashboardProps) {
   const resetProcess = () => {
     setStep('upload');
     setUploadedData(null);
+    setUserInfo(null);
     setProcessingComplete(false);
     setAnalysisResults(null);
     setProcessingError(null);
@@ -60,64 +58,6 @@ export function Dashboard({ className }: DashboardProps) {
             We'll analyze your customer data to generate actionable profitability insights.
           </p>
           <FileUpload onFileProcessed={handleFileProcessed} />
-        </div>
-      )}
-      
-      {step === 'agreement' && (
-        <div className="max-w-2xl mx-auto animate-fade-in">
-          <div className="flex items-center mb-6">
-            <Button 
-              variant="ghost" 
-              size="sm" 
-              className="mr-2" 
-              onClick={resetProcess}
-            >
-              <ArrowLeft className="h-4 w-4 mr-1" />
-              Back
-            </Button>
-            <h2 className="text-2xl font-semibold">Review & Agree</h2>
-          </div>
-          
-          {uploadedData && (
-            <>
-              <div className="mb-6 p-4 bg-secondary rounded-lg">
-                <h3 className="text-sm font-medium mb-2 flex items-center">
-                  <Upload className="h-4 w-4 mr-1.5" />
-                  Uploaded File Preview
-                </h3>
-                <div className="text-sm">
-                  <p className="text-muted-foreground">
-                    Filename: <span className="text-foreground">{uploadedData.fileName}</span>
-                  </p>
-                  <p className="text-muted-foreground">
-                    Customers: <span className="text-foreground">{uploadedData.customers.length} records</span>
-                  </p>
-                  
-                  <div className="mt-3 border-t pt-3">
-                    <p className="text-xs text-muted-foreground mb-1">Sample Data (first 2 records):</p>
-                    <div className="grid grid-cols-1 gap-2">
-                      {uploadedData.customers.slice(0, 2).map((customer: any, index: number) => (
-                        <div key={index} className="text-xs p-2 bg-white rounded border">
-                          <div className="grid grid-cols-2 gap-x-4 gap-y-1">
-                            <span className="text-muted-foreground">Name:</span>
-                            <span>{customer.name}</span>
-                            <span className="text-muted-foreground">Email:</span>
-                            <span>{customer.email}</span>
-                            <span className="text-muted-foreground">Phone:</span>
-                            <span>{customer.phone}</span>
-                            <span className="text-muted-foreground">Address:</span>
-                            <span>{customer.address}</span>
-                          </div>
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-                </div>
-              </div>
-              
-              <UserAgreement onAccept={handleAgreementAccepted} />
-            </>
-          )}
         </div>
       )}
       
@@ -167,6 +107,22 @@ export function Dashboard({ className }: DashboardProps) {
                   Analysis complete! Here are your personalized business insights based on the data you provided.
                 </p>
               </div>
+              
+              {userInfo && (
+                <div className="mb-6 p-4 bg-secondary/50 rounded-lg">
+                  <div className="flex items-center">
+                    <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center mr-3">
+                      <User className="h-5 w-5 text-primary" />
+                    </div>
+                    <div>
+                      <h3 className="text-sm font-medium">{userInfo.name}</h3>
+                      <p className="text-xs text-muted-foreground">
+                        {userInfo.email} {userInfo.company ? `• ${userInfo.company}` : ''}
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              )}
               
               {analysisResults && (
                 <Tabs defaultValue="insights" className="mb-8">
