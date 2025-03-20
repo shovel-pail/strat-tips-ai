@@ -120,8 +120,6 @@ const Index = () => {
         </div>
       </section>
       
-      {/* Testimonials/CTA Section - optional, not implementing for brevity */}
-      
       <Footer />
     </div>
   );
